@@ -1,624 +1,1659 @@
-# Backlog do Projeto EnAULA – GitHub Projects
+Backlog do Projeto EnAULA – GitHub Projects
 
-Este documento apresenta o backlog do projeto **EnAULA**, organizado para utilização no GitHub Projects.
+Este documento apresenta o backlog do projeto EnAULA, organizado para utilização no GitHub Projects.
 
-As histórias de usuário abaixo são baseadas nas **18 histórias de usuário definidas para o projeto**, mantendo seus respectivos épicos, objetivos e critérios de aceitação.
+As histórias de usuário abaixo são baseadas nas 32 histórias de usuário definidas para o projeto, mantendo seus respectivos épicos, objetivos e critérios de aceitação.
 
 Cada história contém:
 
-- **ID**
-- **História de usuário**
-- **Épico**
-- **MoSCoW**
-- **Size**
-- **Sprint**
-- **Critérios de aceitação**
-- **Tasks técnicas**
-
-> **Observação:** MoSCoW, Size e Sprint são uma proposta de organização do backlog. Caso esses valores já tenham sido definidos pelo grupo no GitHub Projects, devem prevalecer os valores do grupo.
-
----
+ID
 
-# 1. Visão geral do Backlog
-
-| ID    | História                                 | Épico                 | MoSCoW | Size | Sprint   |
-| ----- | ---------------------------------------- | --------------------- | ------ | ---- | -------- |
-| HU001 | Cadastro de usuário                      | Autenticação          | Must   | M    | Sprint 1 |
-| HU002 | Realização de login                      | Autenticação          | Must   | P    | Sprint 1 |
-| HU003 | Busca de aulas por filtros               | Busca                 | Must   | M    | Sprint 1 |
-| HU004 | Criação de aula                          | Aulas                 | Must   | M    | Sprint 1 |
-| HU005 | Gerenciamento de materiais               | Aulas                 | Should | M    | Sprint 2 |
-| HU006 | Gerenciamento de matrículas de alunos    | Aulas                 | Must   | M    | Sprint 2 |
-| HU007 | Consultar histórico de aulas ministradas | Aulas                 | Should | M    | Sprint 2 |
-| HU008 | Ministração de aula                      | Aulas                 | Must   | G    | Sprint 3 |
-| HU009 | Solicitação de matrícula em aula         | Matrícula             | Must   | M    | Sprint 1 |
-| HU010 | Pagamento de matrícula                   | Matrícula             | Must   | G    | Sprint 2 |
-| HU011 | Cancelamento de matrícula                | Matrícula             | Should | M    | Sprint 3 |
-| HU012 | Consultar histórico de aulas assistidas  | Matrícula             | Should | M    | Sprint 3 |
-| HU013 | Avaliação de professor após a aula       | Avaliações            | Should | M    | Sprint 4 |
-| HU014 | Avaliação de aluno após aula             | Avaliações            | Should | M    | Sprint 4 |
-| HU015 | Denúncia de aula — aluno                 | Denúncias e Moderação | Should | M    | Sprint 4 |
-| HU016 | Denúncia de aula — professor             | Denúncias e Moderação | Should | M    | Sprint 4 |
-| HU017 | Efetuar reembolso                        | Denúncias e Moderação | Should | M    | Sprint 4 |
-| HU018 | Avaliação de denúncia                    | Denúncias e Moderação | Should | M    | Sprint 4 |
+História de usuário
 
-# 2. Épico: Autenticação
+Épico
 
-## HU001 – Cadastro de usuário
+MoSCoW
 
-**Épico:** Autenticação  
-**MoSCoW:** Must  
-**Size:** M  
-**Sprint:** Sprint 1
+Size
 
-### História de usuário
+Sprint
 
-> **Como** usuário, **quero** realizar meu cadastro no EnAULA, **para** poder acessar as funcionalidades disponíveis na plataforma.
+Critérios de aceitação
 
-### Critérios de aceitação
+Tasks técnicas
 
-- [ ] O usuário consegue preencher os dados necessários para realizar o cadastro.
-- [ ] O sistema valida os dados informados.
-- [ ] A senha é armazenada de forma segura.
-- [ ] O sistema impede o cadastro de dados inválidos.
-- [ ] O usuário recebe confirmação após o cadastro.
-- [ ] O cadastro respeita as regras de privacidade e proteção de dados definidas para o projeto.
+Observação: MoSCoW, Size e Sprint são uma proposta de organização do backlog. Caso esses valores já tenham sido definidos pelo grupo no GitHub Projects, devem prevalecer os valores do grupo.
 
-A HU001 contempla cadastro de usuário, segurança da senha e aspectos relacionados à LGPD.
+1. Visão geral do Backlog
 
-### Tasks
+ID
 
-- [ ] Criar tela de cadastro.
-- [ ] Criar modelo de usuário.
-- [ ] Implementar validação dos campos.
-- [ ] Implementar armazenamento seguro da senha.
-- [ ] Implementar persistência do usuário.
-- [ ] Implementar mensagens de erro.
-- [ ] Implementar confirmação de cadastro.
-- [ ] Criar testes do cadastro.
+História
 
----
+Épico
 
-## HU002 – Realização de login
+MoSCoW
 
-**Épico:** Autenticação  
-**MoSCoW:** Must  
-**Size:** P  
-**Sprint:** Sprint 1
+Size
 
-### História de usuário
+Sprint
 
-> **Como** usuário cadastrado, **quero** realizar login no EnAULA, **para** acessar minha conta e utilizar as funcionalidades da plataforma.
+HU001
 
-### Critérios de aceitação
+Cadastro de Aluno
 
-- [ ] O usuário consegue informar e-mail e senha.
-- [ ] O sistema valida as credenciais.
-- [ ] O acesso é permitido quando as credenciais são válidas.
-- [ ] O acesso é negado quando as credenciais são inválidas.
-- [ ] A comunicação ocorre utilizando HTTPS.
-- [ ] O processamento do login atende ao tempo estabelecido na história.
-- [ ] A mensagem de erro não expõe informações sensíveis.
+Autenticação
 
-Esses critérios incluem os requisitos de HTTPS, tempo de processamento e tratamento genérico de erro definidos na HU002.
+Must
 
-### Tasks
+M
 
-- [ ] Criar tela de login.
-- [ ] Implementar autenticação.
-- [ ] Implementar validação de credenciais.
-- [ ] Implementar controle de sessão.
-- [ ] Implementar tratamento de credenciais inválidas.
-- [ ] Configurar HTTPS.
-- [ ] Criar testes de login.
+Sprint 1
 
----
+HU002
 
-# 3. Épico: Busca
+Cadastro de Monitor/Professor
 
-## HU003 – Busca de aulas por filtros
+Autenticação
 
-**Épico:** Busca  
-**MoSCoW:** Must  
-**Size:** M  
-**Sprint:** Sprint 1
+Must
 
-### História de usuário
+M
 
-> **Como** aluno, **quero** buscar aulas utilizando filtros, **para** encontrar uma aula adequada às minhas necessidades.
+Sprint 1
 
-### Critérios de aceitação
+HU003
 
-- [ ] O usuário consegue pesquisar aulas.
-- [ ] É possível utilizar os filtros definidos na história.
-- [ ] Os resultados correspondem aos filtros selecionados.
-- [ ] A busca respeita as regras definidas para aulas presenciais e online.
-- [ ] O sistema informa quando não existem resultados.
-- [ ] Os resultados são apresentados de forma clara.
+Cadastro de Administrador
 
-A HU003 possui regras específicas para filtros e raio de busca de aulas presenciais e online.
+Autenticação
 
-### Tasks
+Must
 
-- [ ] Criar tela de busca.
-- [ ] Criar filtros.
-- [ ] Implementar consulta das aulas.
-- [ ] Implementar regras de localização.
-- [ ] Implementar resultados.
-- [ ] Implementar mensagem para nenhum resultado.
-- [ ] Criar testes de busca.
+M
 
----
+Sprint 1
 
-# 4. Épico: Aulas
+HU004
 
-## HU004 – Criação de aula
+REALIZAÇÃO DE LOGIN
 
-**Épico:** Aulas  
-**MoSCoW:** Must  
-**Size:** M  
-**Sprint:** Sprint 1
+Autenticação
 
-### História de usuário
+Must
 
-> **Como** professor, **quero** criar uma aula, **para** disponibilizá-la para os alunos.
+P
 
-### Tasks
+Sprint 1
 
-- [ ] Criar formulário de aula.
-- [ ] Implementar campos necessários.
-- [ ] Validar informações.
-- [ ] Associar aula ao professor.
-- [ ] Salvar aula.
-- [ ] Disponibilizar aula para busca.
-- [ ] Criar testes.
+HU005
 
----
+Busca de aulas por filtros
 
-## HU005 – Gerenciamento de materiais
+Busca
 
-**Épico:** Aulas  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 2
+Must
 
-### História de usuário
+M
 
-> **Como** professor, **quero** gerenciar os materiais das minhas aulas, **para** disponibilizar conteúdo aos alunos.
+Sprint 1
 
-### Tasks
+HU006
 
-- [ ] Criar área de materiais.
-- [ ] Permitir adicionar materiais.
-- [ ] Validar arquivos.
-- [ ] Associar materiais às aulas.
-- [ ] Permitir consultar materiais.
-- [ ] Permitir alterações ou remoções quando aplicável.
-- [ ] Criar testes.
+Cadastro de matéria pelo professor
 
----
+Aulas (Professor)
 
-## HU006 – Gerenciamento de matrículas de alunos
+Must
 
-**Épico:** Aulas  
-**MoSCoW:** Must  
-**Size:** M  
-**Sprint:** Sprint 2
+M
 
-### História de usuário
+Sprint 1
 
-> **Como** professor, **quero** gerenciar as matrículas dos alunos nas minhas aulas, **para** controlar os participantes.
+HU007
 
-### Tasks
+Criar aula
 
-- [ ] Criar tela de matrículas.
-- [ ] Exibir solicitações.
-- [ ] Permitir aprovar matrícula.
-- [ ] Permitir recusar matrícula.
-- [ ] Atualizar status.
-- [ ] Notificar aluno.
-- [ ] Criar testes.
+Aulas (Professor)
 
----
+Must
 
-## HU007 – Consultar histórico de aulas ministradas
+M
 
-**Épico:** Aulas  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 2
+Sprint 1
 
-### História de usuário
+HU008
 
-> **Como** professor, **quero** consultar o histórico das aulas ministradas, **para** acompanhar as aulas que já realizei.
+Definir modalidade da aula
 
-### Tasks
+Aulas (Professor)
 
-- [ ] Criar tela de histórico.
-- [ ] Recuperar aulas ministradas.
-- [ ] Exibir informações das aulas.
-- [ ] Permitir visualizar materiais relacionados.
-- [ ] Permitir visualizar gravações quando disponíveis.
-- [ ] Criar testes.
+Must
 
----
+P
 
-## HU008 – Ministração de aula
+Sprint 1
 
-**Épico:** Aulas  
-**MoSCoW:** Must  
-**Size:** G  
-**Sprint:** Sprint 3
+HU009
 
-### História de usuário
+Definir formato e valor da aula
 
-> **Como** professor, **quero** ministrar uma aula pelo EnAULA, **para** realizar a aula com os alunos matriculados.
+Aulas (Professor)
 
-### Critérios de aceitação
+Must
 
-- [ ] A aula pode ser iniciada no horário previsto.
-- [ ] Apenas participantes autorizados conseguem acessar.
-- [ ] A aula é gravada conforme definido.
-- [ ] A gravação é armazenada.
-- [ ] O sistema trata problemas relacionados à transmissão.
-- [ ] O chat e os recursos previstos funcionam corretamente.
+M
 
-A HU008 possui requisitos específicos de gravação automática, tolerância de atraso e monitoramento do chat.
+Sprint 1
 
-### Tasks
+HU010
 
-- [ ] Criar sala de aula online.
-- [ ] Implementar controle de acesso.
-- [ ] Integrar sistema de gravação.
-- [ ] Implementar gravação automática.
-- [ ] Implementar chat.
-- [ ] Implementar encerramento da aula.
-- [ ] Armazenar gravação.
-- [ ] Criar testes.
+Configurar disponibilidade
 
----
+Aulas (Professor)
 
-# 5. Épico: Matrícula
+Must
 
-## HU009 – Solicitação de matrícula em aula
+M
 
-**Épico:** Matrícula  
-**MoSCoW:** Must  
-**Size:** M  
-**Sprint:** Sprint 1
+Sprint 1
 
-### História de usuário
+HU011
 
-> **Como** aluno, **quero** solicitar matrícula em uma aula, **para** participar da aula escolhida.
+Gerenciamento de materiais
 
-### Tasks
+Aulas (Professor)
 
-- [ ] Permitir seleção da aula.
-- [ ] Verificar disponibilidade.
-- [ ] Criar solicitação.
-- [ ] Registrar solicitação.
-- [ ] Notificar professor.
-- [ ] Exibir status da solicitação.
-- [ ] Criar testes.
+Should
 
----
+M
 
-## HU010 – Pagamento de matrícula
+Sprint 2
 
-**Épico:** Matrícula  
-**MoSCoW:** Must  
-**Size:** G  
-**Sprint:** Sprint 2
+HU012
 
-### História de usuário
+Gerenciamento de matrículas de alunos
 
-> **Como** aluno, **quero** pagar minha matrícula, **para** confirmar minha participação na aula.
+Aulas (Professor)
 
-### Tasks
+Must
 
-- [ ] Criar tela de pagamento.
-- [ ] Integrar gateway de pagamento.
-- [ ] Processar pagamento.
-- [ ] Registrar transação.
-- [ ] Atualizar status da matrícula.
-- [ ] Tratar pagamento recusado.
-- [ ] Criar testes.
+M
 
----
+Sprint 2
 
-## HU011 – Cancelamento de matrícula
+HU013
 
-**Épico:** Matrícula  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 3
+Consultar histórico de aulas ministradas
 
-### História de usuário
+Aulas (Professor)
 
-> **Como** aluno, **quero** cancelar minha matrícula, **para** desistir da aula dentro das condições permitidas.
+Should
 
-### Tasks
+M
 
-- [ ] Criar opção de cancelamento.
-- [ ] Verificar prazo permitido.
-- [ ] Atualizar status.
-- [ ] Calcular condições de reembolso quando aplicável.
-- [ ] Registrar cancelamento.
-- [ ] Notificar usuário.
-- [ ] Criar testes.
+Sprint 2
 
----
+HU014
 
-## HU012 – Consultar histórico de aulas assistidas
+Entrar em aula por videochamada
 
-**Épico:** Matrícula  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 3
+Aulas (Professor)
 
-### História de usuário
+Must
 
-> **Como** aluno, **quero** consultar meu histórico de aulas assistidas, **para** acompanhar as aulas das quais participei.
+G
 
-### Tasks
+Sprint 3
 
-- [ ] Criar tela de histórico.
-- [ ] Recuperar aulas assistidas.
-- [ ] Exibir informações das aulas.
-- [ ] Permitir acesso aos conteúdos disponíveis.
-- [ ] Permitir acesso às gravações quando disponíveis.
-- [ ] Criar testes.
+HU015
 
----
+Gravar aula automaticamente
 
-# 6. Épico: Avaliações
+Aulas (Professor)
 
-## HU013 – Avaliação de professor após a aula
+Must
 
-**Épico:** Avaliações  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 4
+G
 
-### História de usuário
+Sprint 3
 
-> **Como** aluno, **quero** avaliar o professor após a aula, **para** registrar minha experiência e contribuir para sua avaliação.
+HU016
 
-### Critérios de aceitação
+Acessar gravação da aula
 
-- [ ] Apenas alunos que participaram da aula podem avaliar.
-- [ ] A avaliação ocorre após a conclusão da aula.
-- [ ] O aluno pode informar a nota.
-- [ ] O aluno pode registrar comentário quando previsto.
-- [ ] Avaliações abaixo de 3 estrelas seguem as regras definidas.
-- [ ] A avaliação é armazenada.
+Aulas (Professor)
 
-A HU013 estabelece regras específicas para avaliações inferiores a 3 estrelas.
+Should
 
-### Tasks
+M
 
-- [ ] Criar formulário de avaliação.
-- [ ] Validar participação do aluno.
-- [ ] Implementar nota.
-- [ ] Implementar comentário.
-- [ ] Implementar regras para notas baixas.
-- [ ] Salvar avaliação.
-- [ ] Criar testes.
+Sprint 3
 
----
+HU017
 
-## HU014 – Avaliação de aluno após aula
+Controlar entrada de alunos atrasados
 
-**Épico:** Avaliações  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 4
+Aulas (Professor)
 
-### História de usuário
+Should
 
-> **Como** professor, **quero** avaliar o aluno após a aula, **para** registrar minha experiência com o aluno.
+M
 
-### Tasks
+Sprint 3
 
-- [ ] Criar formulário de avaliação.
-- [ ] Validar participação do aluno.
-- [ ] Implementar nota.
-- [ ] Implementar comentário.
-- [ ] Salvar avaliação.
-- [ ] Garantir independência entre as avaliações.
-- [ ] Criar testes.
+HU018
 
-A HU014 estabelece que a avaliação do professor deve ser independente da avaliação feita pelo aluno.
+Utilizar chat durante a aula
 
----
+Aulas (Professor)
 
-# 7. Épico: Denúncias e Moderação
+Should
 
-## HU015 – Denúncia de aula pelo aluno
+M
 
-**Épico:** Denúncias e Moderação  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 4
+Sprint 3
 
-### História de usuário
+HU019
 
-> **Como** aluno, **quero** denunciar uma aula, **para** informar um comportamento inadequado ou uma irregularidade.
+Solicitação de matrícula em aula
 
-### Tasks
+Matrícula (Aluno)
 
-- [ ] Criar formulário de denúncia.
-- [ ] Permitir selecionar o motivo.
-- [ ] Permitir descrição.
-- [ ] Registrar denúncia.
-- [ ] Associar denúncia à aula.
-- [ ] Disponibilizar denúncia para análise.
-- [ ] Registrar log da denúncia.
-- [ ] Criar testes.
+Must
 
----
+M
 
-## HU016 – Denúncia de aula pelo professor
+Sprint 2
 
-**Épico:** Denúncias e Moderação  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 4
+HU020
 
-### História de usuário
+Escolher e confirmar pagamento
 
-> **Como** professor, **quero** denunciar uma aula ou comportamento inadequado de um aluno, **para** informar a administração do EnAULA.
+Matrícula (Aluno)
 
-### Tasks
+Must
 
-- [ ] Criar formulário de denúncia para professor.
-- [ ] Permitir selecionar o aluno/aula.
-- [ ] Permitir informar motivo.
-- [ ] Registrar denúncia.
-- [ ] Disponibilizar denúncia para administração.
-- [ ] Registrar log.
-- [ ] Criar testes.
+G
 
----
+Sprint 2
 
-## HU017 – Efetuar reembolso
+HU021
 
-**Épico:** Denúncias e Moderação  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 4
+Processar pagamento de matrícula
 
-### História de usuário
+Matrícula (Aluno)
 
-> **Como** usuário responsável pelo processo, **quero** efetuar o reembolso de uma matrícula quando aplicável, **para** devolver o valor devido ao aluno.
+Must
 
-### Tasks
+G
 
-- [ ] Identificar pagamentos elegíveis para reembolso.
-- [ ] Validar condições do reembolso.
-- [ ] Integrar com o gateway.
-- [ ] Solicitar reembolso.
-- [ ] Registrar transação.
-- [ ] Atualizar status.
-- [ ] Notificar usuário.
-- [ ] Criar testes.
+Sprint 2
 
----
+HU022
 
-## HU018 – Avaliação de denúncia
+Cancelamento de matrícula
 
-**Épico:** Denúncias e Moderação  
-**MoSCoW:** Should  
-**Size:** M  
-**Sprint:** Sprint 4
+Matrícula (Aluno)
 
-### História de usuário
+Should
 
-> **Como** administrador, **quero** avaliar uma denúncia, **para** decidir quais medidas devem ser tomadas.
+M
 
-### Critérios de aceitação
+Sprint 3
 
-- [ ] O administrador consegue visualizar a denúncia.
-- [ ] O administrador consegue consultar as informações relacionadas.
-- [ ] Quando necessário, a gravação da aula pode ser utilizada como evidência.
-- [ ] O administrador pode arquivar a denúncia.
-- [ ] O administrador pode aplicar as medidas previstas.
-- [ ] A decisão é registrada.
-- [ ] As ações realizadas ficam registradas em log.
+HU023
 
-A HU018 prevê a análise da denúncia, utilização das informações disponíveis como evidência e registro das ações tomadas.
+Processamento de reembolso por cancelamento
 
-### Tasks
+Matrícula (Aluno)
 
-- [ ] Criar painel administrativo de denúncias.
-- [ ] Listar denúncias.
-- [ ] Criar tela de detalhes.
-- [ ] Permitir consultar evidências.
-- [ ] Implementar decisão administrativa.
-- [ ] Implementar arquivamento.
-- [ ] Registrar ações em log.
-- [ ] Criar testes.
+Should
 
----
+M
 
-# Dependências principais
+Sprint 3
 
-Para o GitHub Projects, recomendo também registrar as dependências entre as histórias.
+HU024
 
-HU001 Cadastro
+Consultar histórico de aulas assistidas
 
-      ↓
+Matrícula (Aluno)
 
-HU002 Login
+Should
 
-      ↓
+M
 
-HU003 Busca de aulas
+Sprint 3
 
-      ↓
+HU025
 
-HU009 Solicitação de matrícula
+Avaliação de professor após a aula
 
-      ↓
+Avaliações
 
-HU006 Gerenciamento de matrículas
+Should
 
-      ↓
+M
 
-HU010 Pagamento
+Sprint 4
 
-      ↓
+HU026
 
-HU008 Ministração da aula
+Avaliação de aluno após aula
 
-      ↓
+Avaliações
 
-HU012 Histórico / HU013 Avaliação
+Should
 
-Para o professor:
+M
 
-HU001 Cadastro
+Sprint 4
 
-      ↓
+HU027
 
-HU002 Login
+Denúncia de aula (aluno)
 
-      ↓
+Denúncias e Moderação
 
-HU004 Criação de aula
+Should
 
-      ↓
+M
 
-HU006 Gerenciamento de matrículas
+Sprint 4
 
-      ↓
+HU028
 
-HU008 Ministração
+Denúncia de aula (professor)
 
-      ↓
+Denúncias e Moderação
 
-HU007 Histórico / HU014 Avaliação
+Should
 
-Para moderação:
+M
 
-HU015 Denúncia do aluno
+Sprint 4
 
-          ↓
+HU029
 
-HU016 Denúncia do professor
+Efetuar reembolso
 
-          ↓
+Denúncias e Moderação
 
-HU018 Avaliação da denúncia
+Should
 
-          ↓
+M
 
-HU017 Reembolso
+Sprint 4
 
-Essas dependências são uma **proposta de planejamento baseada na relação funcional entre as histórias**; o arquivo das HUs não fornece explicitamente uma ordem de Sprint para elas.
+HU030
 
----
+Visualizar denúncia
 
-# 
+Denúncias e Moderação
 
+Must
 
+M
+
+Sprint 4
+
+HU031
+
+Analisar evidências da denúncia
+
+Denúncias e Moderação
+
+Must
+
+M
+
+Sprint 4
+
+HU032
+
+Registrar decisão sobre denúncia
+
+Denúncias e Moderação
+
+Must
+
+M
+
+Sprint 4
+
+2. Épico: Autenticação
+
+HU001 – Cadastro de Aluno
+
+Épico: Autenticação
+MoSCoW: Must
+Size: M
+Sprint: Sprint 1
+
+História de usuário
+
+Como interessado em aprender por meio da plataforma EnAULA, quero me cadastrar como aluno, para poder buscar, agendar e participar de aulas oferecidas pelos monitores.
+
+Critérios de aceitação
+
+O aluno deve informar nome, e-mail e senha para criar sua conta.
+
+O sistema deve validar se o e-mail informado possui um formato válido.
+
+O sistema não deve permitir o cadastro de dois usuários com o mesmo e-mail.
+
+A senha deve ser armazenada com criptografia, nunca em texto puro.
+
+Após o cadastro, o usuário deve possuir o perfil de Aluno.
+
+O aluno poderá buscar aulas e monitores disponíveis na plataforma.
+
+O cadastro deve coletar apenas os dados pessoais necessários, em conformidade com a LGPD.
+
+O sistema deve exibir uma mensagem de sucesso após a conclusão do cadastro.
+
+Tasks
+
+Criar tela de cadastro.
+
+Criar modelo de usuário.
+
+Validar nome, e-mail e senha.
+
+Impedir e-mail duplicado.
+
+Implementar armazenamento seguro da senha.
+
+Atribuir perfil de Aluno.
+
+Implementar regras de LGPD.
+
+Implementar confirmação de cadastro.
+
+Criar testes.
+
+HU002 – Cadastro de Monitor/Professor
+
+Épico: Autenticação
+MoSCoW: Must
+Size: M
+Sprint: Sprint 1
+
+História de usuário
+
+Como professor ou estudante de curso superior, quero me cadastrar como monitor na plataforma EnAULA, para poder disponibilizar meus conhecimentos e oferecer aulas aos alunos.
+
+Critérios de aceitação
+
+O monitor deve informar nome, e-mail e senha para criar sua conta.
+
+O sistema deve permitir o cadastro apenas de usuários que atendam aos requisitos para atuar como monitor.
+
+O sistema deve validar se o e-mail informado possui um formato válido.
+
+O sistema não deve permitir o cadastro de dois usuários com o mesmo e-mail.
+
+A senha deve ser armazenada com criptografia, nunca em texto puro.
+
+Após o cadastro, o usuário deve possuir o perfil de Monitor.
+
+O monitor poderá cadastrar as disciplinas ou áreas de conhecimento que deseja ensinar.
+
+O monitor poderá informar sua disponibilidade de horários.
+
+O monitor poderá definir o valor cobrado por hora de aula.
+
+O cadastro deve coletar apenas os dados pessoais necessários, em conformidade com a LGPD.
+
+O sistema deve exibir uma mensagem de sucesso após a conclusão do cadastro.
+
+Tasks
+
+Criar tela de cadastro de monitor.
+
+Validar requisitos para atuação como monitor.
+
+Validar e-mail e duplicidade.
+
+Implementar armazenamento seguro da senha.
+
+Atribuir perfil de Monitor.
+
+Implementar cadastro de disciplinas/áreas.
+
+Implementar disponibilidade.
+
+Implementar valor por hora.
+
+Implementar regras de LGPD.
+
+Criar testes.
+
+HU003 – Cadastro de Administrador
+
+Épico: Autenticação
+MoSCoW: Must
+Size: M
+Sprint: Sprint 1
+
+História de usuário
+
+Como responsável pela administração da plataforma EnAULA, quero possuir uma conta de administrador, para gerenciar usuários, conteúdos e demais recursos do sistema.
+
+Critérios de aceitação
+
+O administrador deve possuir nome, e-mail e senha cadastrados.
+
+O e-mail do administrador deve ser único no sistema.
+
+A senha deve ser armazenada com criptografia, nunca em texto puro.
+
+O perfil de Administrador não deve estar disponível para cadastro público.
+
+A criação de uma conta de administrador deve ser realizada por um administrador autorizado ou por meio de um processo controlado pelo sistema.
+
+O administrador poderá visualizar e gerenciar os usuários cadastrados na plataforma.
+
+O administrador poderá gerenciar informações relacionadas às disciplinas e demais recursos administrativos do sistema.
+
+O sistema deve controlar o acesso às funcionalidades administrativas por meio de autenticação e autorização.
+
+O cadastro deve seguir os princípios de segurança e proteção de dados previstos pela LGPD.
+
+O sistema deve exibir uma mensagem de sucesso após a criação da conta de administrador.
+
+Tasks
+
+Criar fluxo controlado de criação de administrador.
+
+Validar e-mail único.
+
+Implementar armazenamento seguro da senha.
+
+Impedir cadastro público de administrador.
+
+Implementar autorização administrativa.
+
+Implementar gerenciamento de usuários.
+
+Implementar gerenciamento de disciplinas e recursos.
+
+Implementar regras de LGPD.
+
+Criar testes.
+
+HU004 – REALIZAÇÃO DE LOGIN
+
+Épico: Autenticação
+MoSCoW: Must
+Size: P
+Sprint: Sprint 1
+
+História de usuário
+
+Como usuário, quero fazer login com e-mail e senha, para acessar minha conta no EnAula.
+
+Critérios de aceitação
+
+O sistema valida e-mail e senha
+
+A comunicação entre app e servidor é feita via HTTPS
+
+O processamento do login ocorre em até 3 segundos
+
+Em caso de erro, o sistema exibe mensagem genérica (sem indicar qual o campo está incorreto)
+
+Após login bem-sucedido, o usuário é redirecionado para a tela incial de acordo com seu perfil
+
+Tasks
+
+Criar tela de login.
+
+Implementar autenticação.
+
+Validar credenciais.
+
+Configurar HTTPS.
+
+Implementar controle de tempo do processamento.
+
+Implementar mensagem genérica de erro.
+
+Redirecionar conforme perfil.
+
+Criar testes.
+
+3. Épico: Busca
+
+HU005 – Busca de aulas por filtros
+
+Épico: Busca
+MoSCoW: Must
+Size: M
+Sprint: Sprint 1
+
+História de usuário
+
+Como aluno, quero buscar aulas disponíveis usando filtros, para encontrar um monitor que se encaixe no meu orçamento e horário.
+
+Critérios de aceitação
+
+O aluno pode filtrar por matéria, professor, valor da aula e distância
+
+Para aulas presenciais, a busca considera um raio padrão de 5km
+
+Para aulas online, a busca considera um raio padrão de 100km
+
+Os resultados exibem: nome do monitor, matéria, valor da hora-aula e avaliação média
+
+A tela de resultados carrega em até 3 segundos
+
+Se nenhum resultado for encontrado, o sistema exibe uma mensagem informando a ausência de resultados para os filtros aplicados
+
+Tasks
+
+Criar tela de busca.
+
+Criar filtros.
+
+Implementar consulta das aulas.
+
+Implementar filtros de matéria, professor, valor e distância.
+
+Implementar regras de raio presencial e online.
+
+Exibir resultados com informações do monitor.
+
+Implementar mensagem para nenhum resultado.
+
+Criar testes.
+
+4. Épico: Aulas (Professor)
+
+HU006 – Cadastro de matéria pelo professor
+
+Épico: Aulas (Professor)
+MoSCoW: Must
+Size: M
+Sprint: Sprint 1
+
+História de usuário
+
+Como professor/monitor da EnAULA, quero cadastrar uma matéria que desejo lecionar, para disponibilizar minha área de ensino aos alunos que procuram aulas na plataforma.
+
+Critérios de aceitação
+
+O professor deve estar autenticado na plataforma.
+
+O professor deve informar o nome da matéria que deseja cadastrar.
+
+O professor deve informar uma descrição da matéria.
+
+A matéria deve ficar vinculada ao professor que realizou o cadastro.
+
+Após o cadastro, a matéria deve ficar disponível na área do professor para que ele possa criar uma aula.
+
+Ao transformar uma matéria em aula, o professor deve informar a data, o horário, o local e o valor da aula.
+
+A aula criada deve ficar vinculada à matéria cadastrada e ao professor responsável.
+
+O sistema deve validar se os campos obrigatórios foram preenchidos.
+
+Tasks
+
+Criar cadastro de matéria.
+
+Validar autenticação do professor.
+
+Validar campos obrigatórios.
+
+Vincular matéria ao professor.
+
+Disponibilizar matéria para criação de aula.
+
+Implementar criação da aula a partir da matéria.
+
+Validar data, horário, local e valor.
+
+Criar testes.
+
+HU007 – Criar aula
+
+Épico: Aulas (Professor)
+MoSCoW: Must
+Size: M
+Sprint: Sprint 1
+
+História de usuário
+
+Como monitor, quero criar uma aula informando matéria, data, horário e duração, para disponibilizá-la aos alunos.
+
+Critérios de aceitação
+
+O monitor define matéria dentre as matérias vinculadas ao ENEM
+
+O monitor define data e horário
+
+A duração mínima da aula é de 1 hora
+
+A aula criada fica visível na busca para os alunos
+
+Tasks
+
+Criar formulário de aula.
+
+Implementar seleção de matéria vinculada.
+
+Definir data e horário.
+
+Validar duração mínima de 1 hora.
+
+Disponibilizar aula na busca.
+
+Criar testes.
+
+HU008 – Definir modalidade da aula
+
+Épico: Aulas (Professor)
+MoSCoW: Must
+Size: P
+Sprint: Sprint 1
+
+História de usuário
+
+Como monitor, quero definir a modalidade da aula, para informar aos alunos se ela será online ou presencial.
+
+Critérios de aceitação
+
+O monitor pode selecionar a modalidade online ou presencial
+
+A modalidade selecionada fica vinculada à aula
+
+A modalidade é exibida aos alunos na busca e nos detalhes da aula
+
+Tasks
+
+Criar seleção de modalidade.
+
+Permitir modalidade online ou presencial.
+
+Vincular modalidade à aula.
+
+Exibir modalidade na busca.
+
+Exibir modalidade nos detalhes.
+
+Criar testes.
+
+HU009 – Definir formato e valor da aula
+
+Épico: Aulas (Professor)
+MoSCoW: Must
+Size: M
+Sprint: Sprint 1
+
+História de usuário
+
+Como monitor, quero definir se a aula será individual ou em grupo e informar seu valor, para estabelecer as condições de participação.
+
+Critérios de aceitação
+
+O monitor define se a aula é individual ou em grupo
+
+No caso de aula em grupo, o valor por aluno é diluído entre os participantes
+
+O valor da aula respeita o valor mínimo definido pela tabela de preços da plataforma (por nível/titulação do monitor)
+
+Tasks
+
+Criar seleção individual ou em grupo.
+
+Implementar cálculo do valor por aluno.
+
+Aplicar valor mínimo da plataforma.
+
+Criar testes.
+
+HU010 – Configurar disponibilidade
+
+Épico: Aulas (Professor)
+MoSCoW: Must
+Size: M
+Sprint: Sprint 1
+
+História de usuário
+
+Como monitor, quero estabelecer previamente minha agenda de disponibilidade, para informar os horários em que posso ministrar aulas.
+
+Critérios de aceitação
+
+O monitor pode configurar sua disponibilidade semanal ou mensal
+
+Os horários configurados podem ser utilizados na criação das aulas
+
+A disponibilidade fica associada ao perfil do monitor
+
+Tasks
+
+Criar configuração de disponibilidade.
+
+Permitir agenda semanal ou mensal.
+
+Validar horários.
+
+Utilizar disponibilidade na criação das aulas.
+
+Vincular disponibilidade ao perfil do monitor.
+
+Criar testes.
+
+HU011 – Gerenciamento de materiais
+
+Épico: Aulas (Professor)
+MoSCoW: Should
+Size: M
+Sprint: Sprint 2
+
+História de usuário
+
+Como monitor, quero enviar materiais de apoio (PDFs, exercícios, listas) vinculados às minhas aulas, para complementar o conteúdo ministrado.
+
+Critérios de aceitação
+
+O monitor pode anexar arquivos (PDF e formatos de documento comuns) a uma aula
+
+Os materiais enviados ficam disponíveis para os alunos matriculados na aula
+
+O monitor é o único responsável pelo conteúdo dos materiais disponibilizados
+
+O monitor pode remover um material previamente enviado
+
+Tasks
+
+Criar área de materiais.
+
+Permitir anexar PDFs e documentos.
+
+Validar arquivos.
+
+Vincular materiais às aulas.
+
+Disponibilizar materiais aos alunos matriculados.
+
+Permitir remoção de materiais.
+
+Criar testes.
+
+HU012 – Gerenciamento de matrículas de alunos
+
+Épico: Aulas (Professor)
+MoSCoW: Must
+Size: M
+Sprint: Sprint 2
+
+História de usuário
+
+Como monitor, quero confirmar ou recusar solicitações de matrícula em minhas aulas, para controlar quem participa das aulas que ministro.
+
+Critérios de aceitação
+
+Toda solicitação de matrícula exige confirmação explícita do monitor (não é automática)
+
+O monitor visualiza a lista de alunos que solicitaram matrícula em uma aula
+
+Após confirmação, o aluno recebe notificação de que sua matrícula foi aceita
+
+O monitor pode recusar uma solicitação, informando o aluno
+
+Tasks
+
+Criar tela de matrículas.
+
+Exibir solicitações.
+
+Exigir confirmação explícita.
+
+Permitir aceitar solicitação.
+
+Permitir recusar solicitação.
+
+Atualizar status.
+
+Notificar aluno.
+
+Criar testes.
+
+HU013 – Consultar histórico de aulas ministradas
+
+Épico: Aulas (Professor)
+MoSCoW: Should
+Size: M
+Sprint: Sprint 2
+
+História de usuário
+
+Como monitor, quero consultar o histórico das aulas que já ministrei, para acompanhar meu desempenho e minha renda na plataforma.
+
+Critérios de aceitação
+
+O histórico lista data, matéria, aluno(s) e valor recebido por aula
+
+O monitor pode acessar gravações de aulas já ministradas, respeitando o prazo de retenção definido pela plataforma
+
+O histórico é ordenado da aula mais recente para a mais antiga
+
+Tasks
+
+Criar tela de histórico.
+
+Recuperar aulas ministradas.
+
+Exibir data, matéria, alunos e valor.
+
+Ordenar por data.
+
+Permitir acesso às gravações dentro do prazo.
+
+Criar testes.
+
+HU014 – Entrar em aula por videochamada
+
+Épico: Aulas (Professor)
+MoSCoW: Must
+Size: G
+Sprint: Sprint 3
+
+História de usuário
+
+Como monitor, quero entrar na aula por meio de uma videochamada integrada ao EnAULA, para ministrar a aula dentro da plataforma.
+
+Critérios de aceitação
+
+A aula é realizada através de videochamada integrada ao EnAULA
+
+O monitor consegue acessar a videochamada a partir da aula agendada
+
+Tasks
+
+Integrar videochamada à aula.
+
+Criar acesso a partir da aula agendada.
+
+Controlar acesso do monitor.
+
+Criar testes.
+
+HU015 – Gravar aula automaticamente
+
+Épico: Aulas (Professor)
+MoSCoW: Must
+Size: G
+Sprint: Sprint 3
+
+História de usuário
+
+Como monitor, quero que a aula seja gravada automaticamente, para permitir seu registro e posterior consulta.
+
+Critérios de aceitação
+
+A gravação inicia automaticamente desde o início da aula
+
+A gravação fica vinculada à aula realizada
+
+A gravação respeita o prazo de retenção definido pela plataforma
+
+Tasks
+
+Integrar gravação automática.
+
+Iniciar gravação no início da aula.
+
+Vincular gravação à aula.
+
+Aplicar prazo de retenção.
+
+Criar testes.
+
+HU016 – Acessar gravação da aula
+
+Épico: Aulas (Professor)
+MoSCoW: Should
+Size: M
+Sprint: Sprint 3
+
+História de usuário
+
+Como aluno ou monitor, quero acessar a gravação de uma aula realizada, para rever o conteúdo posteriormente.
+
+Critérios de aceitação
+
+A gravação fica disponível para o aluno rever
+
+O monitor pode acessar gravações de aulas que ministrou
+
+O acesso respeita o prazo de retenção definido pela plataforma
+
+Tasks
+
+Criar acesso às gravações para alunos.
+
+Criar acesso às gravações para monitores.
+
+Validar permissões.
+
+Aplicar prazo de retenção.
+
+Criar testes.
+
+HU017 – Controlar entrada de alunos atrasados
+
+Épico: Aulas (Professor)
+MoSCoW: Should
+Size: M
+Sprint: Sprint 3
+
+História de usuário
+
+Como monitor, quero controlar a entrada de alunos atrasados, para manter o funcionamento adequado da aula em grupo.
+
+Critérios de aceitação
+
+Existe tolerância de atraso definida pela plataforma
+
+Após o tempo de tolerância, a aula pode ser iniciada mesmo com alunos ausentes
+
+Os alunos que ultrapassarem o limite de atraso perdem o acesso à aula
+
+Tasks
+
+Configurar tolerância de atraso.
+
+Controlar entrada dos alunos.
+
+Permitir início após a tolerância.
+
+Bloquear acesso após o limite.
+
+Criar testes.
+
+HU018 – Utilizar chat durante a aula
+
+Épico: Aulas (Professor)
+MoSCoW: Should
+Size: M
+Sprint: Sprint 3
+
+História de usuário
+
+Como aluno ou monitor, quero utilizar o chat durante a aula, para trocar mensagens relacionadas ao conteúdo ministrado.
+
+Critérios de aceitação
+
+A aula disponibiliza uma ferramenta de chat
+
+O chat pode ser utilizado durante a aula
+
+A ferramenta de chat é monitorada conforme os requisitos de segurança da plataforma
+
+Tasks
+
+Implementar chat da aula.
+
+Permitir mensagens durante a aula.
+
+Aplicar monitoramento e segurança.
+
+Criar testes.
+
+5. Épico: Matrícula (Aluno)
+
+HU019 – Solicitação de matrícula em aula
+
+Épico: Matrícula (Aluno)
+MoSCoW: Must
+Size: M
+Sprint: Sprint 2
+
+História de usuário
+
+Como aluno, quero solicitar matrícula em uma aula disponível, para poder participar dela.
+
+Critérios de aceitação
+
+O aluno solicita matrícula a partir da tela de detalhes da aula
+
+A matrícula fica com status "pendente" até a confirmação do monitor
+
+O sistema confirma a matrícula em tempo real assim que o monitor aceita
+
+O aluno recebe notificação sobre o resultado da solicitação (aceita ou recusada)
+
+Tasks
+
+Criar solicitação de matrícula.
+
+Registrar status pendente.
+
+Notificar monitor.
+
+Atualizar status após decisão.
+
+Notificar aluno.
+
+Criar testes.
+
+HU020 – Escolher e confirmar pagamento
+
+Épico: Matrícula (Aluno)
+MoSCoW: Must
+Size: G
+Sprint: Sprint 2
+
+História de usuário
+
+Como aluno, quero visualizar e confirmar o pagamento da matrícula, para garantir minha vaga na aula.
+
+Critérios de aceitação
+
+O aluno visualiza o valor total antes de confirmar o pagamento
+
+O aluno pode confirmar o pagamento dentro da plataforma
+
+A comunicação de dados de pagamento é feita via HTTPS
+
+Tasks
+
+Criar tela de pagamento.
+
+Exibir valor total.
+
+Implementar confirmação do pagamento.
+
+Configurar comunicação HTTPS.
+
+Criar testes.
+
+HU021 – Processar pagamento de matrícula
+
+Épico: Matrícula (Aluno)
+MoSCoW: Must
+Size: G
+Sprint: Sprint 2
+
+História de usuário
+
+Como aluno, quero que o pagamento da matrícula seja processado pela plataforma, para efetivar minha participação na aula.
+
+Critérios de aceitação
+
+O pagamento é processado dentro da plataforma
+
+Após o pagamento confirmado, a matrícula do aluno é efetivada
+
+O sistema informa o resultado do processamento do pagamento
+
+Tasks
+
+Integrar processamento de pagamento.
+
+Processar pagamento.
+
+Efetivar matrícula após confirmação.
+
+Informar resultado do processamento.
+
+Criar testes.
+
+HU022 – Cancelamento de matrícula
+
+Épico: Matrícula (Aluno)
+MoSCoW: Should
+Size: M
+Sprint: Sprint 3
+
+História de usuário
+
+Como aluno, quero cancelar minha matrícula em uma aula, para desistir de uma aula que não poderei mais assistir.
+
+Critérios de aceitação
+
+O aluno pode cancelar a matrícula respeitando o limite de horas de antecedência definido pela plataforma
+
+O sistema pede confirmação antes de efetivar o cancelamento
+
+Fora do prazo permitido, o sistema informa que o cancelamento não gera reembolso
+
+Tasks
+
+Criar opção de cancelamento.
+
+Validar prazo de antecedência.
+
+Solicitar confirmação.
+
+Atualizar matrícula.
+
+Informar condição de reembolso.
+
+Criar testes.
+
+HU023 – Processamento de reembolso por cancelamento
+
+Épico: Matrícula (Aluno)
+MoSCoW: Should
+Size: M
+Sprint: Sprint 3
+
+História de usuário
+
+Como aluno, quero receber o reembolso quando o cancelamento ocorrer dentro das condições estabelecidas, para recuperar o valor correspondente à matrícula cancelada.
+
+Critérios de aceitação
+
+Ao cancelar dentro do prazo permitido, o aluno recebe reembolso proporcional ao tempo que ficou com a matrícula reservada
+
+O sistema informa o valor do reembolso
+
+O reembolso é processado após a confirmação do cancelamento
+
+Tasks
+
+Calcular valor do reembolso.
+
+Exibir valor ao aluno.
+
+Processar reembolso após confirmação.
+
+Criar testes.
+
+HU024 – Consultar histórico de aulas assistidas
+
+Épico: Matrícula (Aluno)
+MoSCoW: Should
+Size: M
+Sprint: Sprint 3
+
+História de usuário
+
+Como aluno, quero consultar o histórico das aulas que já assisti, para acompanhar meu progresso de estudos.
+
+Critérios de aceitação
+
+O histórico lista data, matéria, monitor e status da aula (concluída, cancelada)
+
+O aluno pode acessar a gravação de aulas já assistidas, respeitando o prazo de retenção
+
+O histórico é ordenado da aula mais recente para a mais antiga
+
+Tasks
+
+Criar tela de histórico do aluno.
+
+Recuperar aulas assistidas.
+
+Exibir data, matéria, monitor e status.
+
+Ordenar por data.
+
+Permitir acesso às gravações dentro do prazo.
+
+Criar testes.
+
+6. Épico: Avaliações
+
+HU025 – Avaliação de professor após a aula
+
+Épico: Avaliações
+MoSCoW: Should
+Size: M
+Sprint: Sprint 4
+
+História de usuário
+
+Como aluno, quero avaliar o monitor após a aula, para contribuir com a reputação dele na plataforma.
+
+Critérios de aceitação
+
+A avaliação é feita em uma escala de estrelas (1 a 5)
+
+Se a nota for menor que 3 estrelas, o sistema exige uma justificativa por escrito
+
+A avaliação fica visível no perfil público do monitor
+
+A avaliação só pode ser feita após a conclusão da aula
+
+Tasks
+
+Criar formulário de avaliação.
+
+Validar participação do aluno.
+
+Implementar nota de 1 a 5.
+
+Exigir justificativa abaixo de 3 estrelas.
+
+Exibir avaliação no perfil público.
+
+Restringir avaliação após conclusão da aula.
+
+Criar testes.
+
+HU026 – Avaliação de aluno após aula
+
+Épico: Avaliações
+MoSCoW: Should
+Size: M
+Sprint: Sprint 4
+
+História de usuário
+
+Como monitor, quero avaliar o aluno após a aula, para contribuir com a reputação dele na plataforma.
+
+Critérios de aceitação
+
+A avaliação é feita em uma escala de estrelas (1 a 5)
+
+Se a nota for menor que 3 estrelas, o sistema exige uma justificativa por escrito
+
+A avaliação só pode ser feita após a conclusão da aula
+
+A avaliação recíproca (aluno ↔ monitor) é independente: um lado não vê a nota do outro antes de avaliar
+
+Tasks
+
+Criar formulário de avaliação.
+
+Validar participação do monitor.
+
+Implementar nota de 1 a 5.
+
+Exigir justificativa abaixo de 3 estrelas.
+
+Garantir independência entre avaliações.
+
+Criar testes.
+
+7. Épico: Denúncias e Moderação
+
+HU027 – Denúncia de aula (aluno)
+
+Épico: Denúncias e Moderação
+MoSCoW: Should
+Size: M
+Sprint: Sprint 4
+
+História de usuário
+
+Como aluno, quero denunciar uma aula ou o comportamento de um monitor, para relatar situações inadequadas à administração da plataforma.
+
+Critérios de aceitação
+
+O botão de denúncia está disponível na tela da aula ou no histórico
+
+O aluno descreve o motivo da denúncia
+
+A denúncia é registrada e associada à aula e aos usuários envolvidos, com log da ação
+
+O aluno recebe confirmação de que a denúncia foi registrada
+
+Tasks
+
+Criar formulário de denúncia.
+
+Permitir descrição do motivo.
+
+Associar denúncia à aula e usuários.
+
+Registrar log.
+
+Exibir confirmação.
+
+Criar testes.
+
+HU028 – Denúncia de aula (professor)
+
+Épico: Denúncias e Moderação
+MoSCoW: Should
+Size: M
+Sprint: Sprint 4
+
+História de usuário
+
+Como monitor, quero denunciar uma aula ou o comportamento de um aluno, para relatar situações inadequadas à administração da plataforma.
+
+Critérios de aceitação
+
+O botão de denúncia está disponível na tela da aula ou no histórico
+
+O monitor descreve o motivo da denúncia
+
+A denúncia é registrada e associada à aula e aos usuários envolvidos, com log da ação
+
+O monitor recebe confirmação de que a denúncia foi registrada
+
+Tasks
+
+Criar formulário de denúncia do monitor.
+
+Permitir descrição do motivo.
+
+Associar denúncia à aula e usuários.
+
+Registrar log.
+
+Exibir confirmação.
+
+Criar testes.
+
+HU029 – Efetuar reembolso
+
+Épico: Denúncias e Moderação
+MoSCoW: Should
+Size: M
+Sprint: Sprint 4
+
+História de usuário
+
+Como monitor, quero efetuar o reembolso de uma matrícula em situações justificadas, para resolver problemas com um aluno sem depender exclusivamente da administração.
+
+Critérios de aceitação
+
+O monitor pode iniciar um reembolso para uma matrícula específica
+
+O sistema solicita confirmação antes de efetivar o reembolso
+
+O aluno é notificado quando o reembolso é processado
+
+A ação fica registrada em log, vinculada ao monitor que a realizou
+
+Tasks
+
+Criar fluxo de reembolso do monitor.
+
+Selecionar matrícula.
+
+Solicitar confirmação.
+
+Processar reembolso.
+
+Notificar aluno.
+
+Registrar log do monitor.
+
+Criar testes.
+
+HU030 – Visualizar denúncia
+
+Épico: Denúncias e Moderação
+MoSCoW: Must
+Size: M
+Sprint: Sprint 4
+
+História de usuário
+
+Como administrador, quero visualizar as denúncias registradas na plataforma, para analisar as situações relatadas.
+
+Critérios de aceitação
+
+O administrador visualiza a lista de denúncias pendentes
+
+Cada denúncia apresenta detalhes da aula e dos usuários envolvidos
+
+O administrador consegue identificar a denúncia que precisa ser analisada
+
+Tasks
+
+Criar lista de denúncias pendentes.
+
+Exibir detalhes da aula.
+
+Exibir usuários envolvidos.
+
+Permitir identificar denúncias para análise.
+
+Criar testes.
+
+HU031 – Analisar evidências da denúncia
+
+Épico: Denúncias e Moderação
+MoSCoW: Must
+Size: M
+Sprint: Sprint 4
+
+História de usuário
+
+Como administrador, quero acessar as evidências de uma denúncia, para analisar a situação antes de tomar uma decisão.
+
+Critérios de aceitação
+
+O administrador pode acessar a gravação da aula denunciada como evidência
+
+O acesso à gravação respeita o prazo de retenção
+
+As evidências ficam vinculadas à denúncia analisada
+
+Tasks
+
+Permitir acesso à gravação denunciada.
+
+Validar prazo de retenção.
+
+Vincular evidências à denúncia.
+
+Controlar acesso administrativo.
+
+Criar testes.
+
+HU032 – Registrar decisão sobre denúncia
+
+Épico: Denúncias e Moderação
+MoSCoW: Must
+Size: M
+Sprint: Sprint 4
+
+História de usuário
+
+Como administrador, quero registrar a decisão sobre uma denúncia, para definir as medidas cabíveis sobre usuários e aulas denunciadas.
+
+Critérios de aceitação
+
+O administrador registra a decisão como procedente ou improcedente
+
+O administrador registra uma justificativa
+
+Toda decisão do administrador é registrada em log
+
+Tasks
+
+Criar tela de decisão.
+
+Registrar procedente ou improcedente.
+
+Registrar justificativa.
+
+Registrar decisão em log.
+
+Criar testes.
+
+Dependências principais
+
+Para o GitHub Projects, recomenda-se registrar as dependências entre as histórias.
+
+Fluxo do aluno
+
+HU001 / HU004
+
+↓
+
+HU005
+
+↓
+
+HU019
+
+↓
+
+HU012
+
+↓
+
+HU020 / HU021
+
+↓
+
+HU014
+
+↓
+
+HU024 / HU025
+
+Fluxo do monitor
+
+HU002 / HU004
+
+↓
+
+HU006
+
+↓
+
+HU007 / HU008 / HU009 / HU010
+
+↓
+
+HU012
+
+↓
+
+HU014 / HU015 / HU018
+
+↓
+
+HU013 / HU026
+
+Fluxo de cancelamento e reembolso
+
+HU022
+
+↓
+
+HU023 / HU029
+
+Fluxo de denúncias e moderação
+
+HU027 / HU028
+
+↓
+
+HU030
+
+↓
+
+HU031
+
+↓
+
+HU032
+
+Essas dependências são uma proposta de planejamento baseada na relação funcional entre as histórias. O arquivo de Histórias de Usuário é a referência para IDs, títulos e critérios de aceitação
