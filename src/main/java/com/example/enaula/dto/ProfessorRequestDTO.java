@@ -1,4 +1,4 @@
-package com.example.enaula.RequestDTO;
+package com.example.enaula.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -6,7 +6,6 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public record ProfessorRequestDTO(
 
