@@ -1,13 +1,13 @@
 package com.example.enaula.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,28 +17,18 @@ import java.util.List;
 @Setter
 public class Professor extends Usuario {
 
-    @Column(nullable = false, name = "perfil")
+    @Column(nullable = false)
     private String perfil;
 
-    @Column(nullable = true, name = "valorHoraAula", precision = 10, scale = 2)
-    private BigDecimal valorHoraAula;
-
-    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Aula> aulas = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "professor_materia",
-            joinColumns = @JoinColumn(name = "professor_id"),
-            inverseJoinColumns = @JoinColumn(name = "materia_id")
-
+    @Column(
+            name = "valor_hora_aula",
+            precision = 10,
+            scale = 2
     )
-    private List<Materia> materias = new ArrayList<>();
-
+    private BigDecimal valorHoraAula;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR"));
+        return List.of();
     }
-
 }
