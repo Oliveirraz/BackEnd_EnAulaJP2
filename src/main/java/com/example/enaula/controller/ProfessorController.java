@@ -1,7 +1,7 @@
 package com.example.enaula.controller;
 
-import com.example.enaula.RequestDTO.ProfessorRequestDTO;
-import com.example.enaula.ResponseDTO.ProfessorResponseDTO;
+import com.example.enaula.dto.ProfessorRequestDTO;
+import com.example.enaula.dto.ProfessorResponseDTO;
 import com.example.enaula.service.professor.ProfessorService;
 
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class ProfessorController {
     private final ProfessorService professorService;
 
 
-    // ==========================
+    // ==========================SecurityFilterChain
     // CADASTRAR
     // POST
     // ==========================

@@ -1,7 +1,7 @@
 package com.example.enaula.mapper;
 
-import com.example.enaula.RequestDTO.ProfessorRequestDTO;
-import com.example.enaula.ResponseDTO.ProfessorResponseDTO;
+import com.example.enaula.dto.ProfessorRequestDTO;
+import com.example.enaula.dto.ProfessorResponseDTO;
 import com.example.enaula.entity.Professor;
 import org.springframework.stereotype.Component;
 

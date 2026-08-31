@@ -1,4 +1,4 @@
-package com.example.enaula.RequestDTO;
+package com.example.enaula.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

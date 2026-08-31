@@ -1,7 +1,7 @@
 package com.example.enaula.service.professor;
 
-import com.example.enaula.RequestDTO.ProfessorRequestDTO;
-import com.example.enaula.ResponseDTO.ProfessorResponseDTO;
+import com.example.enaula.dto.ProfessorRequestDTO;
+import com.example.enaula.dto.ProfessorResponseDTO;
 import com.example.enaula.entity.Professor;
 import com.example.enaula.mapper.ProfessorMapper;
 import com.example.enaula.repository.ProfessorRepository;

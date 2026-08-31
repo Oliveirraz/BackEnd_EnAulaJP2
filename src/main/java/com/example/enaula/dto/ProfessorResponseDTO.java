@@ -1,4 +1,4 @@
-package com.example.enaula.ResponseDTO;
+package com.example.enaula.dto;
 
 import java.math.BigDecimal;
 
