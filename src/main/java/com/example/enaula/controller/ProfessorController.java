@@ -2,7 +2,7 @@ package com.example.enaula.controller;
 
 import com.example.enaula.dto.ProfessorRequestDTO;
 import com.example.enaula.dto.ProfessorResponseDTO;
-import com.example.enaula.service.professor.ProfessorService;
+import com.example.enaula.service.ProfessorService;
 
 import jakarta.validation.Valid;
 

@@ -1,4 +1,4 @@
-package com.example.enaula.service.professor;
+package com.example.enaula.service;
 
 import com.example.enaula.dto.ProfessorRequestDTO;
 import com.example.enaula.dto.ProfessorResponseDTO;
