@@ -1,4 +1,4 @@
-package com.example.enaula.RequestDTO;
+package com.example.enaula.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -6,12 +6,15 @@ import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public record ProfessorRequestDTO(
 
         @NotBlank(message = "O nome é obrigatório")
-        @Size(min = 3, max = 100, message = "O nome deve ter entre 3 e 100 caracteres")
+        @Size(
+                min = 3,
+                max = 100,
+                message = "O nome deve ter entre 3 e 100 caracteres"
+        )
         String nome,
 
         @NotBlank(message = "O email é obrigatório")
@@ -19,9 +22,16 @@ public record ProfessorRequestDTO(
         String email,
 
         @NotBlank(message = "A senha é obrigatória")
-        @Size(min = 3, message = "A senha deve ter no mínimo 3 caracteres")
+        @Size(
+                min = 3,
+                message = "A senha deve ter no mínimo 3 caracteres"
+        )
         String senha,
 
-        @PositiveOrZero(message = "O valor da hora aula deve ser positivo")
-        BigDecimal valorHoraAula) {
+        @PositiveOrZero(
+                message = "O valor da hora aula deve ser positivo"
+        )
+        BigDecimal valorHoraAula
+
+) {
 }
