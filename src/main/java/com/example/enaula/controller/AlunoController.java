@@ -17,13 +17,17 @@ public class AlunoController {
 
     // Criar aluno
     @PostMapping
-    public AlunoResponseDTO criarAluno(@Valid @RequestBody AlunoRequestDTO dto) {
+    public AlunoResponseDTO criarAluno(
+            @Valid @RequestBody AlunoRequestDTO dto) {
+
         return alunoService.criarAluno(dto);
     }
 
     // Buscar aluno por ID
     @GetMapping("/{id}")
-    public AlunoResponseDTO buscarAlunoPorId(@PathVariable Long id) {
+    public AlunoResponseDTO buscarAlunoPorId(
+            @PathVariable Long id) {
+
         return alunoService.buscarAlunoPorId(id);
     }
 
@@ -31,7 +35,7 @@ public class AlunoController {
     @PutMapping("/{id}")
     public AlunoResponseDTO atualizarAluno(
             @PathVariable Long id,
-            @RequestBody AlunoRequestDTO dto) {
+            @Valid @RequestBody AlunoRequestDTO dto) {
 
         return alunoService.atualizarAluno(id, dto);
     }
@@ -39,7 +43,8 @@ public class AlunoController {
     // Deletar aluno
     @DeleteMapping("/{id}")
     public void deletarAluno(@PathVariable Long id) {
+
         alunoService.deletarAluno(id);
     }
-
 }
+
