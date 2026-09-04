@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 
 @MappedSuperclass
@@ -32,4 +35,5 @@ public abstract class Usuario {
     private String foto;
 
 
+    public abstract Collection<? extends GrantedAuthority> getAuthorities();
 }
