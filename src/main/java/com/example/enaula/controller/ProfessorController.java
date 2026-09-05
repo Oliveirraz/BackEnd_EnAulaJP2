@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/professores")
@@ -24,31 +23,24 @@ public class ProfessorController {
 
     private final ProfessorService professorService;
 
-
-    // ==========================SecurityFilterChain
+    // ==========================
     // CADASTRAR
     // POST
     // ==========================
 
     @PostMapping
-    public ResponseEntity<ProfessorResponseDTO>
-    cadastrar(
-
+    public ResponseEntity<ProfessorResponseDTO> cadastrar(
             @Valid
             @RequestBody ProfessorRequestDTO dto
-
     ) {
 
         ProfessorResponseDTO professor =
-                professorService
-                        .cadastrarProfessor(dto);
-
+                professorService.cadastrarProfessor(dto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(professor);
     }
-
 
     // ==========================
     // LISTAR TODOS
@@ -56,18 +48,13 @@ public class ProfessorController {
     // ==========================
 
     @GetMapping
-    public ResponseEntity<List<ProfessorResponseDTO>>
-    listar() {
+    public ResponseEntity<List<ProfessorResponseDTO>> listar() {
 
         List<ProfessorResponseDTO> professores =
-                professorService
-                        .listarProfessores();
-
+                professorService.listarProfessores();
 
         return ResponseEntity.ok(professores);
-
     }
-
 
     // ==========================
     // BUSCAR POR ID
@@ -75,22 +62,15 @@ public class ProfessorController {
     // ==========================
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProfessorResponseDTO>
-    buscarPorId(
-
+    public ResponseEntity<ProfessorResponseDTO> buscarPorId(
             @PathVariable Long id
-
     ) {
 
         ProfessorResponseDTO professor =
-                professorService
-                        .buscarPorId(id);
-
+                professorService.buscarPorId(id);
 
         return ResponseEntity.ok(professor);
-
     }
-
 
     // ==========================
     // ATUALIZAR
@@ -98,28 +78,17 @@ public class ProfessorController {
     // ==========================
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProfessorResponseDTO>
-    atualizar(
-
+    public ResponseEntity<ProfessorResponseDTO> atualizar(
             @PathVariable Long id,
-
             @Valid
             @RequestBody ProfessorRequestDTO dto
-
     ) {
 
         ProfessorResponseDTO professor =
-                professorService
-                        .atualizarProfessor(
-                                id,
-                                dto
-                        );
-
+                professorService.atualizarProfessor(id, dto);
 
         return ResponseEntity.ok(professor);
-
     }
-
 
     // ==========================
     // DELETAR
@@ -127,21 +96,14 @@ public class ProfessorController {
     // ==========================
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void>
-    deletar(
-
+    public ResponseEntity<Void> deletar(
             @PathVariable Long id
-
     ) {
 
-        professorService
-                .deletarProfessor(id);
-
+        professorService.deletarProfessor(id);
 
         return ResponseEntity
                 .noContent()
                 .build();
-
     }
-
 }

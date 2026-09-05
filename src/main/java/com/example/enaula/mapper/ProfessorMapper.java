@@ -30,7 +30,8 @@ public class ProfessorMapper {
                 professor.getNome(),
                 professor.getEmail(),
                 professor.getPerfil(),
-                professor.getValorHoraAula()
+                professor.getValorHoraAula(),
+                professor.getFoto()
 
         );
     }

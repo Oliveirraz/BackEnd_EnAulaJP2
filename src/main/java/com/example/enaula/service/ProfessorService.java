@@ -18,7 +18,6 @@ public class ProfessorService {
 
     private final ProfessorMapper professorMapper;
 
-
     // ==========================
     // CADASTRAR PROFESSOR
     // ==========================
@@ -37,7 +36,6 @@ public class ProfessorService {
                 .toResponseDTO(professorSalvo);
     }
 
-
     // ==========================
     // LISTAR PROFESSORES
     // ==========================
@@ -50,7 +48,6 @@ public class ProfessorService {
                 .map(professorMapper::toResponseDTO)
                 .toList();
     }
-
 
     // ==========================
     // BUSCAR POR ID
@@ -71,17 +68,13 @@ public class ProfessorService {
                 .toResponseDTO(professor);
     }
 
-
     // ==========================
     // ATUALIZAR PROFESSOR
     // ==========================
 
     public ProfessorResponseDTO atualizarProfessor(
-
             Long id,
-
             ProfessorRequestDTO dto
-
     ) {
 
         Professor professor =
@@ -93,21 +86,17 @@ public class ProfessorService {
                                 )
                         );
 
-
         professorMapper.updateEntity(
                 professor,
                 dto
         );
 
-
         Professor professorAtualizado =
                 professorRepository.save(professor);
-
 
         return professorMapper
                 .toResponseDTO(professorAtualizado);
     }
-
 
     // ==========================
     // DELETAR PROFESSOR
@@ -124,9 +113,6 @@ public class ProfessorService {
                                 )
                         );
 
-
         professorRepository.delete(professor);
-
     }
-
 }
