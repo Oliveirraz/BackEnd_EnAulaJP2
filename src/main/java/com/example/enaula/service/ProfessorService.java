@@ -4,8 +4,10 @@ import com.example.enaula.dto.ProfessorRequestDTO;
 import com.example.enaula.dto.ProfessorResponseDTO;
 import com.example.enaula.entity.Professor;
 import com.example.enaula.mapper.ProfessorMapper;
+import com.example.enaula.repository.AlunoRepository;
 import com.example.enaula.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfessorService {
 
+    private final PasswordEncoder passwordEncoder;
     private final ProfessorRepository professorRepository;
-
+    private final AlunoRepository alunoRepository;
     private final ProfessorMapper professorMapper;
 
     // ==========================
@@ -26,12 +29,27 @@ public class ProfessorService {
             ProfessorRequestDTO dto
     ) {
 
-        Professor professor =
-                professorMapper.toEntity(dto);
+        // Verifica se o e-mail já existe entre os professores
+        // ou entre os alunos
+        if (professorRepository.findByEmail(dto.email()).isPresent()
+                || alunoRepository.findByEmail(dto.email()).isPresent()) {
 
+            throw new IllegalArgumentException("Email já cadastrado");
+        }
+
+        // Converte DTO para entidade
+        Professor professor = professorMapper.toEntity(dto);
+
+        // Criptografa a senha antes de salvar
+        professor.setSenha(
+                passwordEncoder.encode(professor.getSenha())
+        );
+
+        // Salva no banco
         Professor professorSalvo =
                 professorRepository.save(professor);
 
+        // Converte entidade para DTO de resposta
         return professorMapper
                 .toResponseDTO(professorSalvo);
     }
