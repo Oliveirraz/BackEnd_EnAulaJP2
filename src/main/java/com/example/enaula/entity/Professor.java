@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.math.BigDecimal;
@@ -28,13 +27,12 @@ public class Professor extends Usuario {
     )
     private BigDecimal valorHoraAula;
 
-    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
 
     @Override
-    public @Nullable String getPassword() {
+    public String getPassword() {
         return "";
     }
 
