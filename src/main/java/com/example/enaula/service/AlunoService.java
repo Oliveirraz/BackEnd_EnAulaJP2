@@ -27,15 +27,12 @@ public class AlunoService {
 
     public AlunoResponseDTO criarAluno(AlunoRequestDTO dto) {
 
-        // Verifica se o e-mail já existe entre os alunos
-        // ou entre os professores
         if (alunoRepository.findByEmail(dto.email()).isPresent()
                 || professorRepository.findByEmail(dto.email()).isPresent()) {
 
             throw new IllegalArgumentException("Email já cadastrado");
         }
 
-        // Converte DTO para entidade usando o Mapper
         Aluno aluno = alunoMapper.toEntity(dto);
 
         // Criptografa a senha antes de salvar
@@ -43,10 +40,8 @@ public class AlunoService {
                 passwordEncoder.encode(aluno.getSenha())
         );
 
-        // Salva no banco
         Aluno salvo = alunoRepository.save(aluno);
 
-        // Converte entidade para DTO de resposta
         return alunoMapper.toResponseDTO(salvo);
     }
 
@@ -83,8 +78,13 @@ public class AlunoService {
                         )
                 );
 
-        // Atualiza a entidade usando o Mapper
+        // Atualiza nome e e-mail
         alunoMapper.updateEntity(aluno, dto);
+
+        // Criptografa a nova senha antes de salvar
+        aluno.setSenha(
+                passwordEncoder.encode(dto.senha())
+        );
 
         Aluno atualizado = alunoRepository.save(aluno);
 

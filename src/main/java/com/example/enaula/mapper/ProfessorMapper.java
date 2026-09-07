@@ -21,21 +21,17 @@ public class ProfessorMapper {
         return professor;
     }
 
-
     public ProfessorResponseDTO toResponseDTO(Professor professor) {
 
         return new ProfessorResponseDTO(
-
                 professor.getId(),
                 professor.getNome(),
                 professor.getEmail(),
                 professor.getPerfil(),
                 professor.getValorHoraAula(),
                 professor.getFoto()
-
         );
     }
-
 
     public void updateEntity(
             Professor professor,
@@ -44,9 +40,9 @@ public class ProfessorMapper {
 
         professor.setNome(dto.nome());
         professor.setEmail(dto.email());
-        professor.setSenha(dto.senha());
         professor.setValorHoraAula(dto.valorHoraAula());
 
+        // A senha será atualizada no Service
+        // para ser criptografada corretamente.
     }
-
 }

@@ -35,6 +35,8 @@ public class AlunoMapper {
 
         aluno.setNome(dto.nome());
         aluno.setEmail(dto.email());
-        aluno.setSenha(dto.senha());
+
+        // A senha será atualizada no Service
+        // para ser criptografada corretamente.
     }
 }

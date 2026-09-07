@@ -29,15 +29,12 @@ public class ProfessorService {
             ProfessorRequestDTO dto
     ) {
 
-        // Verifica se o e-mail já existe entre os professores
-        // ou entre os alunos
         if (professorRepository.findByEmail(dto.email()).isPresent()
                 || alunoRepository.findByEmail(dto.email()).isPresent()) {
 
             throw new IllegalArgumentException("Email já cadastrado");
         }
 
-        // Converte DTO para entidade
         Professor professor = professorMapper.toEntity(dto);
 
         // Criptografa a senha antes de salvar
@@ -45,11 +42,9 @@ public class ProfessorService {
                 passwordEncoder.encode(professor.getSenha())
         );
 
-        // Salva no banco
         Professor professorSalvo =
                 professorRepository.save(professor);
 
-        // Converte entidade para DTO de resposta
         return professorMapper
                 .toResponseDTO(professorSalvo);
     }
@@ -104,9 +99,15 @@ public class ProfessorService {
                                 )
                         );
 
+        // Atualiza nome, e-mail e valor da hora/aula
         professorMapper.updateEntity(
                 professor,
                 dto
+        );
+
+        // Criptografa a nova senha antes de salvar
+        professor.setSenha(
+                passwordEncoder.encode(dto.senha())
         );
 
         Professor professorAtualizado =
