@@ -20,14 +20,15 @@ public class Aluno extends Usuario{
         return List.of();
     }
 
+   
     @Override
-    public @Nullable String getPassword() {
-        return "";
+    public String getPassword() {
+        return getSenha();
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return getEmail();
     }
 
     @Override

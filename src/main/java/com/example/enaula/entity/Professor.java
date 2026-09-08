@@ -33,12 +33,12 @@ public class Professor extends Usuario {
 
     @Override
     public String getPassword() {
-        return "";
+        return getSenha();
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return getEmail();
     }
 
     @Override

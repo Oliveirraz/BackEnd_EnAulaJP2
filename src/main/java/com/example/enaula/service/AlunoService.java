@@ -6,7 +6,9 @@ import com.example.enaula.entity.Aluno;
 import com.example.enaula.exception.ResourceNotFoundException;
 import com.example.enaula.mapper.AlunoMapper;
 import com.example.enaula.repository.AlunoRepository;
+import com.example.enaula.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,62 +16,94 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AlunoService {
 
+    private final PasswordEncoder passwordEncoder;
     private final AlunoRepository alunoRepository;
+    private final ProfessorRepository professorRepository;
     private final AlunoMapper alunoMapper;
 
+    // ==========================
     // CRIAR ALUNO
+    // ==========================
+
     public AlunoResponseDTO criarAluno(AlunoRequestDTO dto) {
 
-        if (alunoRepository.findByEmail(dto.email()).isPresent()) {
+        if (alunoRepository.findByEmail(dto.email()).isPresent()
+                || professorRepository.findByEmail(dto.email()).isPresent()) {
+
             throw new IllegalArgumentException("Email já cadastrado");
         }
 
-        // Converte DTO para entidade usando o Mapper
         Aluno aluno = alunoMapper.toEntity(dto);
 
-        // Salva no banco
+        // Criptografa a senha antes de salvar
+        aluno.setSenha(
+                passwordEncoder.encode(aluno.getSenha())
+        );
+
         Aluno salvo = alunoRepository.save(aluno);
 
-        // Converte entidade para DTO de resposta
         return alunoMapper.toResponseDTO(salvo);
     }
 
+    // ==========================
     // BUSCAR POR ID
+    // ==========================
+
     @Transactional(readOnly = true)
     public AlunoResponseDTO buscarAlunoPorId(Long id) {
 
         Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Aluno não encontrado"));
+                        new ResourceNotFoundException(
+                                "Aluno não encontrado"
+                        )
+                );
 
         return alunoMapper.toResponseDTO(aluno);
     }
 
+    // ==========================
     // ATUALIZAR ALUNO
+    // ==========================
+
     public AlunoResponseDTO atualizarAluno(
             Long id,
-            AlunoRequestDTO dto) {
+            AlunoRequestDTO dto
+    ) {
 
         Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Aluno não encontrado"));
+                        new ResourceNotFoundException(
+                                "Aluno não encontrado"
+                        )
+                );
 
-        // Atualiza a entidade usando o Mapper
+        // Atualiza nome e e-mail
         alunoMapper.updateEntity(aluno, dto);
+
+        // Criptografa a nova senha antes de salvar
+        aluno.setSenha(
+                passwordEncoder.encode(dto.senha())
+        );
 
         Aluno atualizado = alunoRepository.save(aluno);
 
         return alunoMapper.toResponseDTO(atualizado);
     }
 
+    // ==========================
     // DELETAR ALUNO
+    // ==========================
+
     public void deletarAluno(Long id) {
 
         Aluno aluno = alunoRepository.findById(id)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException("Aluno não encontrado"));
+                        new ResourceNotFoundException(
+                                "Aluno não encontrado"
+                        )
+                );
 
         alunoRepository.delete(aluno);
     }
 }
-
