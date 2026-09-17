@@ -1,8 +1,6 @@
 package com.example.enaula.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,6 +24,13 @@ public class Professor extends Usuario {
             scale = 2
     )
     private BigDecimal valorHoraAula;
+
+    @OneToMany(
+            mappedBy = "professor",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Materia> materias = new java.util.ArrayList<>();
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
