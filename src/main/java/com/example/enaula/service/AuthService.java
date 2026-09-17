@@ -2,14 +2,19 @@ package com.example.enaula.service;
 
 import com.example.enaula.dto.LoginRequestDTO;
 import com.example.enaula.dto.LoginResponseDTO;
+import com.example.enaula.dto.MateriaResponseDTO;
 import com.example.enaula.entity.Aluno;
 import com.example.enaula.entity.Professor;
+import com.example.enaula.mapper.MateriaMapper;
 import com.example.enaula.repository.AlunoRepository;
+import com.example.enaula.repository.MateriaRepository;
 import com.example.enaula.repository.ProfessorRepository;
 import com.example.enaula.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +24,8 @@ public class AuthService {
     private final ProfessorRepository professorRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final MateriaRepository materiaRepository;
+    private final MateriaMapper materiaMapper;
 
     public LoginResponseDTO login(LoginRequestDTO dto) {
 
@@ -58,7 +65,8 @@ public class AuthService {
                 "ALUNO",
                 aluno.getId(),
                 aluno.getNome(),
-                aluno.getEmail()
+                aluno.getEmail(),
+                List.of()
         );
     }
 
@@ -78,12 +86,19 @@ public class AuthService {
                 "PROFESSOR"
         );
 
+        List<MateriaResponseDTO> materias = materiaRepository.
+                findAllByProfessor(professor)
+                .stream()
+                .map(materiaMapper::toResponseDTO)
+                .toList();
+
         return new LoginResponseDTO(
                 token,
                 "PROFESSOR",
                 professor.getId(),
                 professor.getNome(),
-                professor.getEmail()
+                professor.getEmail(),
+                materias
         );
     }
 }
