@@ -32,6 +32,13 @@ public class Professor extends Usuario {
     )
     private List<Materia> materias = new java.util.ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "professor",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Aula> aulas = new java.util.ArrayList<>();
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
