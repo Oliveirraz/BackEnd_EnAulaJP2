@@ -6,6 +6,7 @@ import com.example.enaula.service.AlunoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/alunos")
@@ -16,11 +17,12 @@ public class AlunoController {
     private final AlunoService alunoService;
 
     // Criar aluno
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     public AlunoResponseDTO criarAluno(
-            @Valid @RequestBody AlunoRequestDTO dto) {
+            @RequestPart("aluno") @Valid AlunoRequestDTO dto,
+            @RequestPart(value = "foto", required = false) MultipartFile foto) {
 
-        return alunoService.criarAluno(dto);
+        return alunoService.criarAluno(dto, foto);
     }
 
     // Buscar aluno por ID
@@ -46,5 +48,20 @@ public class AlunoController {
 
         alunoService.deletarAluno(id);
     }
-}
 
+    // Enviar/trocar foto de perfil
+    @PostMapping(value = "/{id}/foto", consumes = "multipart/form-data")
+    public AlunoResponseDTO enviarFoto(
+            @PathVariable Long id,
+            @RequestParam("arquivo") MultipartFile arquivo) {
+
+        return alunoService.enviarFoto(id, arquivo);
+    }
+
+    // Remover foto de perfil
+    @DeleteMapping("/{id}/foto")
+    public AlunoResponseDTO removerFoto(@PathVariable Long id) {
+
+        return alunoService.removerFoto(id);
+    }
+}
