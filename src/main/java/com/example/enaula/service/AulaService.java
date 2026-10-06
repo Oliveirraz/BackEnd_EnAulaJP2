@@ -39,6 +39,7 @@ public class AulaService {
                 materiaRepository.findById(dto.materiaId())
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
+                                new RuntimeException(
                                         "Matéria não encontrada"
                                 )
                         );
@@ -141,6 +142,11 @@ public class AulaService {
         aula.setHorario(dto.horario());
         aula.setDuracao(dto.duracao());
         aula.setModalidade(dto.modalidade());
+        aula.setFormato(dto.formato());
+        aula.setValorAula(dto.valorAula());
+        aula.setQuantidadeParticipantes(
+                dto.quantidadeParticipantes()
+        );
 
         aula.setFormato(dto.formato());
         aula.setValorAula(dto.valorAula());
@@ -217,6 +223,13 @@ public class AulaService {
 
         if (dto.formato() == FormatoAula.GRUPO
                 && participantes < 2) {
+        if (
+                dto.formato() == FormatoAula.GRUPO
+                        && (
+                        participantes == null
+                                || participantes < 2
+                )
+        ) {
 
             throw new IllegalArgumentException(
                     "Aula em grupo deve ter pelo menos 2 participantes"

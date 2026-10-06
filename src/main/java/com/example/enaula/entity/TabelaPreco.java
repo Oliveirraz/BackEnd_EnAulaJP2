@@ -33,4 +33,4 @@ public class TabelaPreco {
             scale = 2
     )
     private BigDecimal valorMinimo;
-}
+
