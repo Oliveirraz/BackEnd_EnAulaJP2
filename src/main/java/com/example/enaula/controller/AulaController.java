@@ -21,7 +21,6 @@ public class AulaController {
 
     private final AulaService aulaService;
 
-
     @PostMapping
     public ResponseEntity<AulaResponseDTO> cadastrar(
             @Valid @RequestBody AulaRequestDTO dto,
@@ -38,7 +37,6 @@ public class AulaController {
                 );
     }
 
-
     @GetMapping
     public ResponseEntity<List<AulaResponseDTO>> listar(
             @AuthenticationPrincipal Professor professor
@@ -48,7 +46,6 @@ public class AulaController {
                 aulaService.listarAulas(professor)
         );
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<AulaResponseDTO> buscarPorId(
@@ -63,7 +60,6 @@ public class AulaController {
                 )
         );
     }
-
 
     @PutMapping("/{id}")
     public ResponseEntity<AulaResponseDTO> atualizar(
@@ -80,7 +76,6 @@ public class AulaController {
                 )
         );
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(

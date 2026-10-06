@@ -1,7 +1,9 @@
 package com.example.enaula.dto;
 
+import com.example.enaula.entity.TitulacaoMonitor;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
@@ -31,7 +33,10 @@ public record ProfessorRequestDTO(
         @PositiveOrZero(
                 message = "O valor da hora aula deve ser positivo"
         )
-        BigDecimal valorHoraAula
+        BigDecimal valorHoraAula,
+
+        @NotNull(message = "A titulação é obrigatória")
+        TitulacaoMonitor titulacao
 
 ) {
 }

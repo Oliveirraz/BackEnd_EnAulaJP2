@@ -3,16 +3,20 @@ package com.example.enaula.service;
 import com.example.enaula.dto.AulaRequestDTO;
 import com.example.enaula.dto.AulaResponseDTO;
 import com.example.enaula.entity.Aula;
+import com.example.enaula.entity.FormatoAula;
 import com.example.enaula.entity.Materia;
 import com.example.enaula.entity.Professor;
+import com.example.enaula.entity.TabelaPreco;
 import com.example.enaula.exception.ResourceNotFoundException;
 import com.example.enaula.mapper.AulaMapper;
 import com.example.enaula.repository.AulaRepository;
 import com.example.enaula.repository.MateriaRepository;
+import com.example.enaula.repository.TabelaPrecoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -21,17 +25,10 @@ import java.util.List;
 public class AulaService {
 
     private final AulaRepository aulaRepository;
-
     private final MateriaRepository materiaRepository;
-
+    private final TabelaPrecoRepository tabelaPrecoRepository;
     private final AulaMapper aulaMapper;
-
     private final DisponibilidadeService disponibilidadeService;
-
-
-    // ============================================================
-    // CADASTRAR AULA
-    // ============================================================
 
     public AulaResponseDTO cadastrarAula(
             AulaRequestDTO dto,
@@ -39,8 +36,7 @@ public class AulaService {
     ) {
 
         Materia materia =
-                materiaRepository
-                        .findById(dto.materiaId())
+                materiaRepository.findById(dto.materiaId())
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "Matéria não encontrada"
@@ -52,8 +48,18 @@ public class AulaService {
                 professor
         );
 
+        // Verifica se o professor está disponível
         validarDisponibilidade(
                 dto,
+                professor
+        );
+
+        // Verifica individual/grupo
+        validarFormatoEParticipantes(dto);
+
+        // Verifica preço mínimo
+        validarValorMinimo(
+                dto.valorAula(),
                 professor
         );
 
@@ -64,18 +70,10 @@ public class AulaService {
                         professor
                 );
 
-        Aula aulaSalva =
-                aulaRepository.save(aula);
-
         return aulaMapper.toResponseDTO(
-                aulaSalva
+                aulaRepository.save(aula)
         );
     }
-
-
-    // ============================================================
-    // LISTAR AULAS
-    // ============================================================
 
     public List<AulaResponseDTO> listarAulas(
             Professor professor
@@ -88,29 +86,18 @@ public class AulaService {
                 .toList();
     }
 
-
-    // ============================================================
-    // BUSCAR AULA POR ID
-    // ============================================================
-
     public AulaResponseDTO buscarPorId(
             Long id,
             Professor professor
     ) {
 
-        Aula aula =
+        return aulaMapper.toResponseDTO(
                 buscarEValidarPosse(
                         id,
                         professor
-                );
-
-        return aulaMapper.toResponseDTO(aula);
+                )
+        );
     }
-
-
-    // ============================================================
-    // ATUALIZAR AULA
-    // ============================================================
 
     public AulaResponseDTO atualizarAula(
             Long id,
@@ -125,8 +112,7 @@ public class AulaService {
                 );
 
         Materia materia =
-                materiaRepository
-                        .findById(dto.materiaId())
+                materiaRepository.findById(dto.materiaId())
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "Matéria não encontrada"
@@ -143,55 +129,42 @@ public class AulaService {
                 professor
         );
 
+        validarFormatoEParticipantes(dto);
+
+        validarValorMinimo(
+                dto.valorAula(),
+                professor
+        );
+
         aula.setMateria(materia);
+        aula.setData(dto.data());
+        aula.setHorario(dto.horario());
+        aula.setDuracao(dto.duracao());
+        aula.setModalidade(dto.modalidade());
 
-        aula.setData(
-                dto.data()
+        aula.setFormato(dto.formato());
+        aula.setValorAula(dto.valorAula());
+        aula.setQuantidadeParticipantes(
+                dto.quantidadeParticipantes()
         );
-
-        aula.setHorario(
-                dto.horario()
-        );
-
-        aula.setDuracao(
-                dto.duracao()
-        );
-
-        aula.setModalidade(
-                dto.modalidade()
-        );
-
-        Aula aulaAtualizada =
-                aulaRepository.save(aula);
 
         return aulaMapper.toResponseDTO(
-                aulaAtualizada
+                aulaRepository.save(aula)
         );
     }
-
-
-    // ============================================================
-    // DELETAR AULA
-    // ============================================================
 
     public void deletarAula(
             Long id,
             Professor professor
     ) {
 
-        Aula aula =
+        aulaRepository.delete(
                 buscarEValidarPosse(
                         id,
                         professor
-                );
-
-        aulaRepository.delete(aula);
+                )
+        );
     }
-
-
-    // ============================================================
-    // VALIDAR DISPONIBILIDADE
-    // ============================================================
 
     private void validarDisponibilidade(
             AulaRequestDTO dto,
@@ -199,19 +172,12 @@ public class AulaService {
     ) {
 
         LocalTime horarioFim =
-                dto.horario()
-                        .plusHours(dto.duracao());
+                dto.horario().plusHours(
+                        dto.duracao()
+                );
 
-        /*
-         * Caso a soma da duração ultrapasse 00:00,
-         * significa que a aula passou para o dia seguinte.
-         *
-         * A aula não pode atravessar dias.
-         */
-        if (
-                horarioFim.equals(dto.horario())
-                        || horarioFim.isBefore(dto.horario())
-        ) {
+        if (horarioFim.equals(dto.horario())
+                || horarioFim.isBefore(dto.horario())) {
 
             throw new IllegalArgumentException(
                     "A duração da aula ultrapassa o limite de um dia"
@@ -229,16 +195,71 @@ public class AulaService {
         if (!disponivel) {
 
             throw new IllegalArgumentException(
-                    "O horário informado não está dentro " +
-                            "da disponibilidade do monitor"
+                    "O horário informado não está dentro da disponibilidade do monitor"
             );
         }
     }
 
+    private void validarFormatoEParticipantes(
+            AulaRequestDTO dto
+    ) {
 
-    // ============================================================
-    // VALIDAR POSSE
-    // ============================================================
+        Integer participantes =
+                dto.quantidadeParticipantes();
+
+        if (dto.formato() == FormatoAula.INDIVIDUAL
+                && participantes != 1) {
+
+            throw new IllegalArgumentException(
+                    "Aula individual deve ter exatamente 1 participante"
+            );
+        }
+
+        if (dto.formato() == FormatoAula.GRUPO
+                && participantes < 2) {
+
+            throw new IllegalArgumentException(
+                    "Aula em grupo deve ter pelo menos 2 participantes"
+            );
+        }
+    }
+
+    private void validarValorMinimo(
+            BigDecimal valorAula,
+            Professor professor
+    ) {
+
+        if (professor.getTitulacao() == null) {
+
+            throw new IllegalArgumentException(
+                    "O monitor precisa possuir uma titulação cadastrada para validar o valor mínimo da aula"
+            );
+        }
+
+        TabelaPreco tabelaPreco =
+                tabelaPrecoRepository
+                        .findByTitulacao(
+                                professor.getTitulacao()
+                        )
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Não existe valor mínimo configurado para a titulação "
+                                                + professor.getTitulacao()
+                                )
+                        );
+
+        if (valorAula.compareTo(
+                tabelaPreco.getValorMinimo()
+        ) < 0) {
+
+            throw new IllegalArgumentException(
+                    "O valor da aula não pode ser inferior ao mínimo de R$ "
+                            + tabelaPreco.getValorMinimo()
+                            + " para a titulação "
+                            + professor.getTitulacao()
+            );
+        }
+    }
 
     private Aula buscarEValidarPosse(
             Long id,
@@ -246,20 +267,17 @@ public class AulaService {
     ) {
 
         Aula aula =
-                aulaRepository
-                        .findById(id)
+                aulaRepository.findById(id)
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "Aula não encontrada"
                                 )
                         );
 
-        if (
-                aula.getProfessor() == null
-                        || !aula.getProfessor()
-                        .getId()
-                        .equals(professor.getId())
-        ) {
+        if (aula.getProfessor() == null
+                || !aula.getProfessor()
+                .getId()
+                .equals(professor.getId())) {
 
             throw new AccessDeniedException(
                     "Você não tem permissão para acessar essa aula"
@@ -269,22 +287,15 @@ public class AulaService {
         return aula;
     }
 
-
-    // ============================================================
-    // VALIDAR MATÉRIA DO PROFESSOR
-    // ============================================================
-
     private void validarMateriaDoProfessor(
             Materia materia,
             Professor professor
     ) {
 
-        if (
-                materia.getProfessor() == null
-                        || !materia.getProfessor()
-                        .getId()
-                        .equals(professor.getId())
-        ) {
+        if (materia.getProfessor() == null
+                || !materia.getProfessor()
+                .getId()
+                .equals(professor.getId())) {
 
             throw new AccessDeniedException(
                     "Você não tem permissão para utilizar essa matéria"
