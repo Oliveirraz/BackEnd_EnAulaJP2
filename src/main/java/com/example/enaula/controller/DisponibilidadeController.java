@@ -1,9 +1,9 @@
 package com.example.enaula.controller;
 
-import com.example.enaula.dto.AulaRequestDTO;
-import com.example.enaula.dto.AulaResponseDTO;
+import com.example.enaula.dto.DisponibilidadeRequestDTO;
+import com.example.enaula.dto.DisponibilidadeResponseDTO;
 import com.example.enaula.entity.Professor;
-import com.example.enaula.service.AulaService;
+import com.example.enaula.service.DisponibilidadeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,61 +15,65 @@ import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/aulas")
+@RequestMapping("/api/disponibilidades")
 @RequiredArgsConstructor
-public class AulaController {
+public class DisponibilidadeController {
 
-    private final AulaService aulaService;
+    private final DisponibilidadeService disponibilidadeService;
+
 
     @PostMapping
-    public ResponseEntity<AulaResponseDTO> cadastrar(
-            @Valid @RequestBody AulaRequestDTO dto,
+    public ResponseEntity<DisponibilidadeResponseDTO> cadastrar(
+            @Valid @RequestBody DisponibilidadeRequestDTO dto,
             @AuthenticationPrincipal Professor professor
     ) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(
-                        aulaService.cadastrarAula(
+                        disponibilidadeService.cadastrar(
                                 dto,
                                 professor
                         )
                 );
     }
 
+
     @GetMapping
-    public ResponseEntity<List<AulaResponseDTO>> listar(
+    public ResponseEntity<List<DisponibilidadeResponseDTO>> listar(
             @AuthenticationPrincipal Professor professor
     ) {
 
         return ResponseEntity.ok(
-                aulaService.listarAulas(professor)
+                disponibilidadeService.listar(professor)
         );
     }
 
+
     @GetMapping("/{id}")
-    public ResponseEntity<AulaResponseDTO> buscarPorId(
+    public ResponseEntity<DisponibilidadeResponseDTO> buscarPorId(
             @PathVariable Long id,
             @AuthenticationPrincipal Professor professor
     ) {
 
         return ResponseEntity.ok(
-                aulaService.buscarPorId(
+                disponibilidadeService.buscarPorId(
                         id,
                         professor
                 )
         );
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<AulaResponseDTO> atualizar(
+    public ResponseEntity<DisponibilidadeResponseDTO> atualizar(
             @PathVariable Long id,
-            @Valid @RequestBody AulaRequestDTO dto,
+            @Valid @RequestBody DisponibilidadeRequestDTO dto,
             @AuthenticationPrincipal Professor professor
     ) {
 
         return ResponseEntity.ok(
-                aulaService.atualizarAula(
+                disponibilidadeService.atualizar(
                         id,
                         dto,
                         professor
@@ -77,13 +81,14 @@ public class AulaController {
         );
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(
             @PathVariable Long id,
             @AuthenticationPrincipal Professor professor
     ) {
 
-        aulaService.deletarAula(
+        disponibilidadeService.deletar(
                 id,
                 professor
         );

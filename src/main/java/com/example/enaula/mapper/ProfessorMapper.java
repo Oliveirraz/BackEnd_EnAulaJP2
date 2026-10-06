@@ -18,9 +18,11 @@ public class ProfessorMapper {
         professor.setEmail(dto.email());
         professor.setSenha(dto.senha());
         professor.setPerfil("Professor");
+
         professor.setValorHoraAula(
                 dto.valorHoraAula()
         );
+
         professor.setTitulacao(
                 dto.titulacao()
         );
@@ -50,14 +52,13 @@ public class ProfessorMapper {
 
         professor.setNome(dto.nome());
         professor.setEmail(dto.email());
+
         professor.setValorHoraAula(
                 dto.valorHoraAula()
         );
+
         professor.setTitulacao(
                 dto.titulacao()
         );
-
-        // A senha será atualizada no Service
-        // para ser criptografada corretamente.
     }
 }

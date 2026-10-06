@@ -33,10 +33,36 @@ public class AulaMapper {
                 dto.quantidadeParticipantes()
         );
 
+        aula.setFormato(dto.formato());
+        aula.setValorAula(dto.valorAula());
+        aula.setQuantidadeParticipantes(
+                dto.quantidadeParticipantes()
+        );
+
         return aula;
     }
 
-    public AulaResponseDTO toResponseDTO(Aula aula) {
+    public AulaResponseDTO toResponseDTO(
+            Aula aula
+    ) {
+
+        Integer participantes =
+                aula.getQuantidadeParticipantes();
+
+        BigDecimal valorPorAluno = null;
+
+        if (aula.getValorAula() != null
+                && participantes != null
+                && participantes > 0) {
+
+            valorPorAluno =
+                    aula.getValorAula()
+                            .divide(
+                                    BigDecimal.valueOf(participantes),
+                                    2,
+                                    RoundingMode.HALF_UP
+                            );
+        }
 
         Integer participantes =
                 aula.getQuantidadeParticipantes();
