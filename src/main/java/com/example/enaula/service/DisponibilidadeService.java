@@ -23,17 +23,27 @@ public class DisponibilidadeService {
 
     private final DisponibilidadeRepository disponibilidadeRepository;
 
+
+    // ============================================================
+    // CADASTRAR
+    // ============================================================
+
     public DisponibilidadeResponseDTO cadastrar(
             DisponibilidadeRequestDTO dto,
             Professor professor
     ) {
+
         validarDados(dto);
 
-        Disponibilidade disponibilidade = new Disponibilidade();
+        Disponibilidade disponibilidade =
+                new Disponibilidade();
 
         disponibilidade.setProfessor(professor);
 
-        preencher(disponibilidade, dto);
+        preencher(
+                disponibilidade,
+                dto
+        );
 
         validarConflito(
                 disponibilidade,
@@ -41,14 +51,23 @@ public class DisponibilidadeService {
                 null
         );
 
-        return toResponse(
-                disponibilidadeRepository.save(disponibilidade)
-        );
+        Disponibilidade salva =
+                disponibilidadeRepository.save(
+                        disponibilidade
+                );
+
+        return toResponse(salva);
     }
+
+
+    // ============================================================
+    // LISTAR
+    // ============================================================
 
     public List<DisponibilidadeResponseDTO> listar(
             Professor professor
     ) {
+
         return disponibilidadeRepository
                 .findAllByProfessorOrderByHorarioInicio(professor)
                 .stream()
@@ -56,26 +75,47 @@ public class DisponibilidadeService {
                 .toList();
     }
 
+
+    // ============================================================
+    // BUSCAR POR ID
+    // ============================================================
+
     public DisponibilidadeResponseDTO buscarPorId(
             Long id,
             Professor professor
     ) {
+
         return toResponse(
-                buscarEValidarPosse(id, professor)
+                buscarEValidarPosse(
+                        id,
+                        professor
+                )
         );
     }
+
+
+    // ============================================================
+    // ATUALIZAR
+    // ============================================================
 
     public DisponibilidadeResponseDTO atualizar(
             Long id,
             DisponibilidadeRequestDTO dto,
             Professor professor
     ) {
+
         validarDados(dto);
 
         Disponibilidade disponibilidade =
-                buscarEValidarPosse(id, professor);
+                buscarEValidarPosse(
+                        id,
+                        professor
+                );
 
-        preencher(disponibilidade, dto);
+        preencher(
+                disponibilidade,
+                dto
+        );
 
         validarConflito(
                 disponibilidade,
@@ -83,19 +123,39 @@ public class DisponibilidadeService {
                 id
         );
 
-        return toResponse(
-                disponibilidadeRepository.save(disponibilidade)
-        );
+        Disponibilidade atualizada =
+                disponibilidadeRepository.save(
+                        disponibilidade
+                );
+
+        return toResponse(atualizada);
     }
+
+
+    // ============================================================
+    // DELETAR
+    // ============================================================
 
     public void deletar(
             Long id,
             Professor professor
     ) {
+
+        Disponibilidade disponibilidade =
+                buscarEValidarPosse(
+                        id,
+                        professor
+                );
+
         disponibilidadeRepository.delete(
-                buscarEValidarPosse(id, professor)
+                disponibilidade
         );
     }
+
+
+    // ============================================================
+    // VERIFICAR DISPONIBILIDADE PARA UMA AULA
+    // ============================================================
 
     public boolean estaDisponivel(
             Professor professor,
@@ -114,79 +174,148 @@ public class DisponibilidadeService {
         }
 
         DiaSemana diaSemana =
-                converterDiaSemana(data.getDayOfWeek());
+                converterDiaSemana(
+                        data.getDayOfWeek()
+                );
 
-        boolean semanal =
+        List<Disponibilidade> disponibilidades =
                 disponibilidadeRepository
-                        .existsByProfessorAndTipoAndDiaSemanaAndHorarioInicioLessThanAndHorarioFimGreaterThan(
-                                professor,
-                                TipoDisponibilidade.SEMANAL,
-                                diaSemana,
-                                fim,
-                                inicio
+                        .findAllByProfessorOrderByHorarioInicio(
+                                professor
                         );
 
-        if (semanal) {
-            return true;
-        }
+        return disponibilidades.stream()
+                .anyMatch(disponibilidade -> {
 
-        return disponibilidadeRepository
-                .existsByProfessorAndTipoAndDataAndHorarioInicioLessThanAndHorarioFimGreaterThan(
-                        professor,
-                        TipoDisponibilidade.MENSAL,
-                        data,
-                        fim,
-                        inicio
-                );
+                    boolean tipoCompativel;
+
+                    if (
+                            disponibilidade.getTipo()
+                                    == TipoDisponibilidade.SEMANAL
+                    ) {
+
+                        tipoCompativel =
+                                disponibilidade.getDiaSemana()
+                                        == diaSemana;
+
+                    } else {
+
+                        tipoCompativel =
+                                disponibilidade.getData()
+                                        .equals(data);
+                    }
+
+                    if (!tipoCompativel) {
+                        return false;
+                    }
+
+                    return !inicio.isBefore(
+                            disponibilidade.getHorarioInicio()
+                    )
+                            && !fim.isAfter(
+                            disponibilidade.getHorarioFim()
+                    );
+                });
     }
+
+
+    // ============================================================
+    // VALIDAR DADOS
+    // ============================================================
 
     private void validarDados(
             DisponibilidadeRequestDTO dto
     ) {
 
-        if (dto.tipo() == TipoDisponibilidade.SEMANAL) {
+        if (dto.tipo() == null) {
 
-            if (dto.diaSemana() == null) {
-                throw new IllegalArgumentException(
-                        "O dia da semana é obrigatório para disponibilidade semanal"
-                );
-            }
-
-            if (dto.data() != null) {
-                throw new IllegalArgumentException(
-                        "A disponibilidade semanal não deve informar uma data específica"
-                );
-            }
+            throw new IllegalArgumentException(
+                    "O tipo de disponibilidade é obrigatório"
+            );
         }
 
-        if (dto.tipo() == TipoDisponibilidade.MENSAL) {
+        if (dto.horarioInicio() == null
+                || dto.horarioFim() == null) {
 
-            if (dto.data() == null) {
-                throw new IllegalArgumentException(
-                        "A data é obrigatória para disponibilidade mensal"
-                );
-            }
-
-            if (dto.diaSemana() != null) {
-                throw new IllegalArgumentException(
-                        "A disponibilidade mensal não deve informar dia da semana"
-                );
-            }
+            throw new IllegalArgumentException(
+                    "Os horários são obrigatórios"
+            );
         }
 
-        if (!dto.horarioInicio().isBefore(dto.horarioFim())) {
+        if (
+                !dto.horarioInicio()
+                        .isBefore(dto.horarioFim())
+        ) {
+
             throw new IllegalArgumentException(
                     "O horário inicial deve ser anterior ao horário final"
             );
         }
+
+
+        // SEMANAL
+
+        if (
+                dto.tipo()
+                        == TipoDisponibilidade.SEMANAL
+        ) {
+
+            if (dto.diaSemana() == null) {
+
+                throw new IllegalArgumentException(
+                        "O dia da semana é obrigatório " +
+                                "para disponibilidade semanal"
+                );
+            }
+
+            if (dto.data() != null) {
+
+                throw new IllegalArgumentException(
+                        "A disponibilidade semanal " +
+                                "não deve possuir uma data"
+                );
+            }
+        }
+
+
+        // MENSAL
+
+        if (
+                dto.tipo()
+                        == TipoDisponibilidade.MENSAL
+        ) {
+
+            if (dto.data() == null) {
+
+                throw new IllegalArgumentException(
+                        "A data é obrigatória " +
+                                "para disponibilidade mensal"
+                );
+            }
+
+            if (dto.diaSemana() != null) {
+
+                throw new IllegalArgumentException(
+                        "A disponibilidade mensal " +
+                                "não deve possuir dia da semana"
+                );
+            }
+        }
     }
+
+
+    // ============================================================
+    // PREENCHER ENTIDADE
+    // ============================================================
 
     private void preencher(
             Disponibilidade disponibilidade,
             DisponibilidadeRequestDTO dto
     ) {
 
-        disponibilidade.setTipo(dto.tipo());
+        disponibilidade.setTipo(
+                dto.tipo()
+        );
 
         disponibilidade.setDiaSemana(
                 dto.diaSemana()
@@ -205,6 +334,11 @@ public class DisponibilidadeService {
         );
     }
 
+
+    // ============================================================
+    // VALIDAR CONFLITO
+    // ============================================================
+
     private void validarConflito(
             Disponibilidade disponibilidade,
             Professor professor,
@@ -222,7 +356,8 @@ public class DisponibilidadeService {
 
                         .filter(item ->
                                 idIgnorado == null
-                                        || !item.getId().equals(idIgnorado)
+                                        || !item.getId()
+                                        .equals(idIgnorado)
                         )
 
                         .filter(item ->
@@ -230,16 +365,22 @@ public class DisponibilidadeService {
                                         == disponibilidade.getTipo()
                         )
 
-                        .filter(item ->
-                                disponibilidade.getTipo()
-                                        == TipoDisponibilidade.SEMANAL
+                        .filter(item -> {
 
-                                        ? item.getDiaSemana()
-                                        == disponibilidade.getDiaSemana()
+                            if (
+                                    disponibilidade.getTipo()
+                                            == TipoDisponibilidade.SEMANAL
+                            ) {
 
-                                        : item.getData()
-                                        .equals(disponibilidade.getData())
-                        )
+                                return item.getDiaSemana()
+                                        == disponibilidade.getDiaSemana();
+
+                            } else {
+
+                                return item.getData()
+                                        .equals(disponibilidade.getData());
+                            }
+                        })
 
                         .anyMatch(item ->
                                 horariosSeSobrepoem(
@@ -251,11 +392,18 @@ public class DisponibilidadeService {
                         );
 
         if (conflito) {
+
             throw new IllegalArgumentException(
-                    "Já existe uma disponibilidade cadastrada nesse período"
+                    "Já existe uma disponibilidade " +
+                            "cadastrada nesse período"
             );
         }
     }
+
+
+    // ============================================================
+    // VERIFICAR SOBREPOSIÇÃO
+    // ============================================================
 
     private boolean horariosSeSobrepoem(
             LocalTime inicio1,
@@ -267,6 +415,11 @@ public class DisponibilidadeService {
         return inicio1.isBefore(fim2)
                 && inicio2.isBefore(fim1);
     }
+
+
+    // ============================================================
+    // VALIDAR POSSE
+    // ============================================================
 
     private Disponibilidade buscarEValidarPosse(
             Long id,
@@ -290,27 +443,18 @@ public class DisponibilidadeService {
         ) {
 
             throw new AccessDeniedException(
-                    "Você não tem permissão para acessar essa disponibilidade"
+                    "Você não tem permissão para acessar " +
+                            "essa disponibilidade"
             );
         }
 
         return disponibilidade;
     }
 
-    private DisponibilidadeResponseDTO toResponse(
-            Disponibilidade disponibilidade
-    ) {
 
-        return new DisponibilidadeResponseDTO(
-                disponibilidade.getId(),
-                disponibilidade.getProfessor().getId(),
-                disponibilidade.getTipo(),
-                disponibilidade.getDiaSemana(),
-                disponibilidade.getData(),
-                disponibilidade.getHorarioInicio(),
-                disponibilidade.getHorarioFim()
-        );
-    }
+    // ============================================================
+    // CONVERTER DIA DA SEMANA
+    // ============================================================
 
     private DiaSemana converterDiaSemana(
             DayOfWeek dayOfWeek
@@ -339,5 +483,25 @@ public class DisponibilidadeService {
             case SUNDAY ->
                     DiaSemana.DOMINGO;
         };
+    }
+
+
+    // ============================================================
+    // RESPONSE DTO
+    // ============================================================
+
+    private DisponibilidadeResponseDTO toResponse(
+            Disponibilidade disponibilidade
+    ) {
+
+        return new DisponibilidadeResponseDTO(
+                disponibilidade.getId(),
+                disponibilidade.getProfessor().getId(),
+                disponibilidade.getTipo(),
+                disponibilidade.getDiaSemana(),
+                disponibilidade.getData(),
+                disponibilidade.getHorarioInicio(),
+                disponibilidade.getHorarioFim()
+        );
     }
 }

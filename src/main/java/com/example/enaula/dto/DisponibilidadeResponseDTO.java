@@ -7,12 +7,20 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public record DisponibilidadeResponseDTO(
+
         Long id,
+
         Long professorId,
+
         TipoDisponibilidade tipo,
+
         DiaSemana diaSemana,
+
         LocalDate data,
+
         LocalTime horarioInicio,
+
         LocalTime horarioFim
+
 ) {
 }

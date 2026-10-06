@@ -21,6 +21,7 @@ public class DisponibilidadeController {
 
     private final DisponibilidadeService disponibilidadeService;
 
+
     @PostMapping
     public ResponseEntity<DisponibilidadeResponseDTO> cadastrar(
             @Valid @RequestBody DisponibilidadeRequestDTO dto,
@@ -37,6 +38,7 @@ public class DisponibilidadeController {
                 );
     }
 
+
     @GetMapping
     public ResponseEntity<List<DisponibilidadeResponseDTO>> listar(
             @AuthenticationPrincipal Professor professor
@@ -46,6 +48,7 @@ public class DisponibilidadeController {
                 disponibilidadeService.listar(professor)
         );
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<DisponibilidadeResponseDTO> buscarPorId(
@@ -60,6 +63,7 @@ public class DisponibilidadeController {
                 )
         );
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<DisponibilidadeResponseDTO> atualizar(
@@ -77,6 +81,7 @@ public class DisponibilidadeController {
         );
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(
             @PathVariable Long id,
@@ -88,6 +93,8 @@ public class DisponibilidadeController {
                 professor
         );
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

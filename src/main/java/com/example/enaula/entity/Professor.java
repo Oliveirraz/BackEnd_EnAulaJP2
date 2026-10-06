@@ -6,6 +6,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -30,17 +31,23 @@ public class Professor extends Usuario {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Materia> materias = new java.util.ArrayList<>();
+    private List<Materia> materias = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "professor",
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
-    private List<Disponibilidade> disponibilidades =
-            new java.util.ArrayList<>();
-    private List<Aula> aulas = new java.util.ArrayList<>();
+    private List<Disponibilidade> disponibilidades = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "professor",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Aula> aulas = new ArrayList<>();
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }

@@ -21,61 +21,80 @@ public class AulaController {
 
     private final AulaService aulaService;
 
-    // CADASTRAR
+
     @PostMapping
     public ResponseEntity<AulaResponseDTO> cadastrar(
             @Valid @RequestBody AulaRequestDTO dto,
             @AuthenticationPrincipal Professor professor
     ) {
-        AulaResponseDTO aula =
-                aulaService.cadastrarAula(dto, professor);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(aula);
+                .body(
+                        aulaService.cadastrarAula(
+                                dto,
+                                professor
+                        )
+                );
     }
 
-    // LISTAR
+
     @GetMapping
     public ResponseEntity<List<AulaResponseDTO>> listar(
             @AuthenticationPrincipal Professor professor
     ) {
+
         return ResponseEntity.ok(
                 aulaService.listarAulas(professor)
         );
     }
 
-    // BUSCAR POR ID
+
     @GetMapping("/{id}")
     public ResponseEntity<AulaResponseDTO> buscarPorId(
             @PathVariable Long id,
             @AuthenticationPrincipal Professor professor
     ) {
+
         return ResponseEntity.ok(
-                aulaService.buscarPorId(id, professor)
+                aulaService.buscarPorId(
+                        id,
+                        professor
+                )
         );
     }
 
-    // ATUALIZAR
+
     @PutMapping("/{id}")
     public ResponseEntity<AulaResponseDTO> atualizar(
             @PathVariable Long id,
             @Valid @RequestBody AulaRequestDTO dto,
             @AuthenticationPrincipal Professor professor
     ) {
+
         return ResponseEntity.ok(
-                aulaService.atualizarAula(id, dto, professor)
+                aulaService.atualizarAula(
+                        id,
+                        dto,
+                        professor
+                )
         );
     }
 
-    // DELETAR
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(
             @PathVariable Long id,
             @AuthenticationPrincipal Professor professor
     ) {
-        aulaService.deletarAula(id, professor);
 
-        return ResponseEntity.noContent().build();
+        aulaService.deletarAula(
+                id,
+                professor
+        );
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

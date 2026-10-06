@@ -19,25 +19,49 @@ public class AulaMapper {
         Aula aula = new Aula();
 
         aula.setMateria(materia);
+
         aula.setProfessor(professor);
-        aula.setData(dto.data());
-        aula.setHorario(dto.horario());
-        aula.setDuracao(dto.duracao());
-        aula.setModalidade(dto.modalidade());
+
+        aula.setData(
+                dto.data()
+        );
+
+        aula.setHorario(
+                dto.horario()
+        );
+
+        aula.setDuracao(
+                dto.duracao()
+        );
+
+        aula.setModalidade(
+                dto.modalidade()
+        );
 
         return aula;
     }
 
-    public AulaResponseDTO toResponseDTO(Aula aula) {
+
+    public AulaResponseDTO toResponseDTO(
+            Aula aula
+    ) {
 
         return new AulaResponseDTO(
+
                 aula.getId(),
+
                 aula.getMateria().getId(),
+
                 aula.getMateria().getNome(),
+
                 aula.getProfessor().getId(),
+
                 aula.getData(),
+
                 aula.getHorario(),
+
                 aula.getDuracao(),
+
                 aula.getModalidade()
         );
     }

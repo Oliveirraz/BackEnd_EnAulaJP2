@@ -19,10 +19,14 @@ public record AulaRequestDTO(
         LocalTime horario,
 
         @NotNull(message = "Duração é obrigatória")
-        @Min(value = 1, message = "A duração mínima da aula é de 1 hora")
+        @Min(
+                value = 1,
+                message = "A duração mínima da aula é de 1 hora"
+        )
         Integer duracao,
 
         @NotNull(message = "Modalidade é obrigatória")
         Modalidade modalidade
+
 ) {
 }

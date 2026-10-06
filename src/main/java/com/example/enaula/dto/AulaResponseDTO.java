@@ -8,12 +8,20 @@ import java.time.LocalTime;
 public record AulaResponseDTO(
 
         Long id,
+
         Long materiaId,
+
         String materiaNome,
+
         Long professorId,
+
         LocalDate data,
+
         LocalTime horario,
+
         Integer duracao,
+
         Modalidade modalidade
+
 ) {
 }
