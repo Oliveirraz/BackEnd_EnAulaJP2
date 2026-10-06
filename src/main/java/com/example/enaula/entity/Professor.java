@@ -37,6 +37,8 @@ public class Professor extends Usuario {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    private List<Disponibilidade> disponibilidades =
+            new java.util.ArrayList<>();
     private List<Aula> aulas = new java.util.ArrayList<>();
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
