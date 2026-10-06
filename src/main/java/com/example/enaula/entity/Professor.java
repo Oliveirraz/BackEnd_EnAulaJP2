@@ -18,6 +18,10 @@ public class Professor extends Usuario {
     @Column(nullable = false)
     private String perfil;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "titulacao")
+    private TitulacaoMonitor titulacao;
+
     @Column(
             name = "valor_hora_aula",
             precision = 10,
