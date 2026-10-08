@@ -39,7 +39,6 @@ public class AulaService {
                 materiaRepository.findById(dto.materiaId())
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
-                                new RuntimeException(
                                         "Matéria não encontrada"
                                 )
                         );
@@ -148,12 +147,6 @@ public class AulaService {
                 dto.quantidadeParticipantes()
         );
 
-        aula.setFormato(dto.formato());
-        aula.setValorAula(dto.valorAula());
-        aula.setQuantidadeParticipantes(
-                dto.quantidadeParticipantes()
-        );
-
         return aulaMapper.toResponseDTO(
                 aulaRepository.save(aula)
         );
@@ -213,6 +206,13 @@ public class AulaService {
         Integer participantes =
                 dto.quantidadeParticipantes();
 
+        if (participantes == null) {
+
+            throw new IllegalArgumentException(
+                    "A quantidade de participantes deve ser informada"
+            );
+        }
+
         if (dto.formato() == FormatoAula.INDIVIDUAL
                 && participantes != 1) {
 
@@ -223,13 +223,6 @@ public class AulaService {
 
         if (dto.formato() == FormatoAula.GRUPO
                 && participantes < 2) {
-        if (
-                dto.formato() == FormatoAula.GRUPO
-                        && (
-                        participantes == null
-                                || participantes < 2
-                )
-        ) {
 
             throw new IllegalArgumentException(
                     "Aula em grupo deve ter pelo menos 2 participantes"
