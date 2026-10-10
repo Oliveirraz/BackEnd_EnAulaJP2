@@ -70,7 +70,8 @@ public class AulaMapper {
                 aula.getFormato(),
                 aula.getValorAula(),
                 participantes,
-                valorPorAluno
+                valorPorAluno,
+                aula.getSalaUrl()
         );
     }
 }

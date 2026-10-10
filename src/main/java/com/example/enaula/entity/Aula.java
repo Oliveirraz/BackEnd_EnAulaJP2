@@ -43,6 +43,12 @@ public class Aula {
     @Column
     private FormatoAula formato;
 
+    @Column(name= "sala_url")
+    private String salaUrl;
+
+    @Column(name = "sala_nome")
+    private String salaNome;
+
     @Column(
             name = "valor_aula",
             precision = 10,

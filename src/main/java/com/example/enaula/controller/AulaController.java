@@ -92,4 +92,16 @@ public class AulaController {
                 .noContent()
                 .build();
     }
+
+
+    @PostMapping("/{id}/iniciar")
+    public ResponseEntity<AulaResponseDTO> iniciar(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Professor professor
+    ) {
+
+        return ResponseEntity.ok(
+                aulaService.iniciarAula(id, professor)
+        );
+    }
 }
