@@ -4,8 +4,10 @@ import com.example.enaula.dto.ProfessorRequestDTO;
 import com.example.enaula.dto.ProfessorResponseDTO;
 import com.example.enaula.entity.Professor;
 import com.example.enaula.mapper.ProfessorMapper;
+import com.example.enaula.repository.AlunoRepository;
 import com.example.enaula.repository.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +16,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProfessorService {
 
+    private final PasswordEncoder passwordEncoder;
     private final ProfessorRepository professorRepository;
-
+    private final AlunoRepository alunoRepository;
     private final ProfessorMapper professorMapper;
-
 
     // ==========================
     // CADASTRAR PROFESSOR
@@ -27,8 +29,18 @@ public class ProfessorService {
             ProfessorRequestDTO dto
     ) {
 
-        Professor professor =
-                professorMapper.toEntity(dto);
+        if (professorRepository.findByEmail(dto.email()).isPresent()
+                || alunoRepository.findByEmail(dto.email()).isPresent()) {
+
+            throw new IllegalArgumentException("Email já cadastrado");
+        }
+
+        Professor professor = professorMapper.toEntity(dto);
+
+        // Criptografa a senha antes de salvar
+        professor.setSenha(
+                passwordEncoder.encode(professor.getSenha())
+        );
 
         Professor professorSalvo =
                 professorRepository.save(professor);
@@ -36,7 +48,6 @@ public class ProfessorService {
         return professorMapper
                 .toResponseDTO(professorSalvo);
     }
-
 
     // ==========================
     // LISTAR PROFESSORES
@@ -50,7 +61,6 @@ public class ProfessorService {
                 .map(professorMapper::toResponseDTO)
                 .toList();
     }
-
 
     // ==========================
     // BUSCAR POR ID
@@ -71,17 +81,13 @@ public class ProfessorService {
                 .toResponseDTO(professor);
     }
 
-
     // ==========================
     // ATUALIZAR PROFESSOR
     // ==========================
 
     public ProfessorResponseDTO atualizarProfessor(
-
             Long id,
-
             ProfessorRequestDTO dto
-
     ) {
 
         Professor professor =
@@ -93,21 +99,23 @@ public class ProfessorService {
                                 )
                         );
 
-
+        // Atualiza nome, e-mail e valor da hora/aula
         professorMapper.updateEntity(
                 professor,
                 dto
         );
 
+        // Criptografa a nova senha antes de salvar
+        professor.setSenha(
+                passwordEncoder.encode(dto.senha())
+        );
 
         Professor professorAtualizado =
                 professorRepository.save(professor);
 
-
         return professorMapper
                 .toResponseDTO(professorAtualizado);
     }
-
 
     // ==========================
     // DELETAR PROFESSOR
@@ -124,9 +132,6 @@ public class ProfessorService {
                                 )
                         );
 
-
         professorRepository.delete(professor);
-
     }
-
 }

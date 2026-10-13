@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProfessorMapper {
 
-    public Professor toEntity(ProfessorRequestDTO dto) {
+    public Professor toEntity(
+            ProfessorRequestDTO dto
+    ) {
 
         Professor professor = new Professor();
 
@@ -16,25 +18,32 @@ public class ProfessorMapper {
         professor.setEmail(dto.email());
         professor.setSenha(dto.senha());
         professor.setPerfil("Professor");
-        professor.setValorHoraAula(dto.valorHoraAula());
+
+        professor.setValorHoraAula(
+                dto.valorHoraAula()
+        );
+
+        professor.setTitulacao(
+                dto.titulacao()
+        );
 
         return professor;
     }
 
-
-    public ProfessorResponseDTO toResponseDTO(Professor professor) {
+    public ProfessorResponseDTO toResponseDTO(
+            Professor professor
+    ) {
 
         return new ProfessorResponseDTO(
-
                 professor.getId(),
                 professor.getNome(),
                 professor.getEmail(),
                 professor.getPerfil(),
-                professor.getValorHoraAula()
-
+                professor.getValorHoraAula(),
+                professor.getTitulacao(),
+                professor.getFoto()
         );
     }
-
 
     public void updateEntity(
             Professor professor,
@@ -43,9 +52,13 @@ public class ProfessorMapper {
 
         professor.setNome(dto.nome());
         professor.setEmail(dto.email());
-        professor.setSenha(dto.senha());
-        professor.setValorHoraAula(dto.valorHoraAula());
 
+        professor.setValorHoraAula(
+                dto.valorHoraAula()
+        );
+
+        professor.setTitulacao(
+                dto.titulacao()
+        );
     }
-
 }

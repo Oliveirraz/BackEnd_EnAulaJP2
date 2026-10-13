@@ -1,13 +1,12 @@
 package com.example.enaula.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,6 +19,10 @@ public class Professor extends Usuario {
     @Column(nullable = false)
     private String perfil;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "titulacao")
+    private TitulacaoProfessor titulacao;
+
     @Column(
             name = "valor_hora_aula",
             precision = 10,
@@ -27,8 +30,59 @@ public class Professor extends Usuario {
     )
     private BigDecimal valorHoraAula;
 
+    @OneToMany(
+            mappedBy = "professor",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Materia> materias = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "professor",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Disponibilidade> disponibilidades = new ArrayList<>();
+
+    @OneToMany(
+            mappedBy = "professor",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private List<Aula> aulas = new ArrayList<>();
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
+    }
+
+    @Override
+    public String getPassword() {
+        return getSenha();
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return super.isEnabled();
     }
 }
