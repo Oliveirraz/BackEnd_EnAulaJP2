@@ -20,7 +20,8 @@ public record AulaResponseDTO(
         FormatoAula formato,
         BigDecimal valorAula,
         Integer quantidadeParticipantes,
-        BigDecimal valorPorAluno
+        BigDecimal valorPorAluno,
+        String salaUrl
 
 ) {
 }

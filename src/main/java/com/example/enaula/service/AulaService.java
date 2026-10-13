@@ -2,11 +2,8 @@ package com.example.enaula.service;
 
 import com.example.enaula.dto.AulaRequestDTO;
 import com.example.enaula.dto.AulaResponseDTO;
-import com.example.enaula.entity.Aula;
-import com.example.enaula.entity.FormatoAula;
-import com.example.enaula.entity.Materia;
-import com.example.enaula.entity.Professor;
-import com.example.enaula.entity.TabelaPreco;
+import com.example.enaula.dto.daily.DailyRoomResponseDTO;
+import com.example.enaula.entity.*;
 import com.example.enaula.exception.ResourceNotFoundException;
 import com.example.enaula.mapper.AulaMapper;
 import com.example.enaula.repository.AulaRepository;
@@ -29,6 +26,7 @@ public class AulaService {
     private final TabelaPrecoRepository tabelaPrecoRepository;
     private final AulaMapper aulaMapper;
     private final DisponibilidadeService disponibilidadeService;
+    private final DailyService dailyService;
 
     public AulaResponseDTO cadastrarAula(
             AulaRequestDTO dto,
@@ -307,5 +305,33 @@ public class AulaService {
                     "Você não tem permissão para utilizar essa matéria"
             );
         }
+    }
+
+    public AulaResponseDTO iniciarAula(
+            Long id,
+            Professor professor
+    ) {
+
+        Aula aula = buscarEValidarPosse(id, professor);
+
+        if (aula.getModalidade() != Modalidade.ONLINE) {
+            throw new IllegalArgumentException(
+                    "Só é possível iniciar sala de vídeo para aulas com modalidade ONLINE"
+            );
+        }
+
+        if (aula.getSalaUrl() != null) {
+            // Sala já foi criada antes, reaproveita em vez de criar outra
+            return aulaMapper.toResponseDTO(aula);
+        }
+
+        DailyRoomResponseDTO sala = dailyService.criarSalaComGravacao();
+
+        aula.setSalaUrl(sala.url());
+        aula.setSalaNome(sala.name());
+
+        return aulaMapper.toResponseDTO(
+                aulaRepository.save(aula)
+        );
     }
 }
