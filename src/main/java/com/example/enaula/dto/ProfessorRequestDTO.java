@@ -1,6 +1,6 @@
 package com.example.enaula.dto;
 
-import com.example.enaula.entity.TitulacaoMonitor;
+import com.example.enaula.entity.TitulacaoProfessor;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -36,7 +36,7 @@ public record ProfessorRequestDTO(
         BigDecimal valorHoraAula,
 
         @NotNull(message = "A titulação é obrigatória")
-        TitulacaoMonitor titulacao
+        TitulacaoProfessor titulacao
 
 ) {
 }
