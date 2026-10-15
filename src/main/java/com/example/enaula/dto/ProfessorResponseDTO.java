@@ -1,6 +1,6 @@
 package com.example.enaula.dto;
 
-import com.example.enaula.entity.TitulacaoMonitor;
+import com.example.enaula.entity.TitulacaoProfessor;
 
 import java.math.BigDecimal;
 
@@ -11,7 +11,7 @@ public record ProfessorResponseDTO(
         String email,
         String perfil,
         BigDecimal valorHoraAula,
-        TitulacaoMonitor titulacao,
+        TitulacaoProfessor titulacao,
         String foto
 
 ) {

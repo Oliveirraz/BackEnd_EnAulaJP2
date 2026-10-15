@@ -1,6 +1,6 @@
 package com.example.enaula.entity;
 
-public enum TitulacaoMonitor {
+public enum TitulacaoProfessor {
     GRADUACAO,
     ESPECIALIZACAO,
     MESTRADO,

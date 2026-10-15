@@ -1,7 +1,8 @@
 package com.example.enaula.config;
 
 import com.example.enaula.entity.TabelaPreco;
-import com.example.enaula.entity.TitulacaoMonitor;
+import com.example.enaula.entity.TitulacaoProfessor;
+import com.example.enaula.entity.TitulacaoProfessor;
 import com.example.enaula.repository.TabelaPrecoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -21,29 +22,29 @@ public class DataInitializer {
         return args -> {
 
             criarPrecoSeNaoExistir(
-                    TitulacaoMonitor.GRADUACAO,
+                    TitulacaoProfessor.GRADUACAO,
                     new BigDecimal("30.00")
             );
 
             criarPrecoSeNaoExistir(
-                    TitulacaoMonitor.ESPECIALIZACAO,
+                    TitulacaoProfessor.ESPECIALIZACAO,
                     new BigDecimal("40.00")
             );
 
             criarPrecoSeNaoExistir(
-                    TitulacaoMonitor.MESTRADO,
+                    TitulacaoProfessor.MESTRADO,
                     new BigDecimal("50.00")
             );
 
             criarPrecoSeNaoExistir(
-                    TitulacaoMonitor.DOUTORADO,
+                    TitulacaoProfessor.DOUTORADO,
                     new BigDecimal("70.00")
             );
         };
     }
 
     private void criarPrecoSeNaoExistir(
-            TitulacaoMonitor titulacao,
+            TitulacaoProfessor titulacao,
             BigDecimal valorMinimo
     ) {
 
