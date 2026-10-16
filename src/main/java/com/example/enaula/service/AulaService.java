@@ -1,3 +1,4 @@
+
 package com.example.enaula.service;
 
 import com.example.enaula.dto.AulaRequestDTO;
@@ -8,6 +9,7 @@ import com.example.enaula.exception.ResourceNotFoundException;
 import com.example.enaula.mapper.AulaMapper;
 import com.example.enaula.repository.AulaRepository;
 import com.example.enaula.repository.MateriaRepository;
+import com.example.enaula.repository.MatriculaRepository;
 import com.example.enaula.repository.TabelaPrecoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -28,6 +30,10 @@ public class AulaService {
     private final DisponibilidadeService disponibilidadeService;
     private final DailyService dailyService;
 
+    // Novos serviços e repositórios para o envio dos e-mails.
+    private final MatriculaRepository matriculaRepository;
+    private final EmailService emailService;
+
     public AulaResponseDTO cadastrarAula(
             AulaRequestDTO dto,
             Professor professor
@@ -41,32 +47,16 @@ public class AulaService {
                                 )
                         );
 
-        validarMateriaDoProfessor(
-                materia,
-                professor
-        );
+        validarMateriaDoProfessor(materia, professor);
 
-        // Verifica se o professor está disponível
-        validarDisponibilidade(
-                dto,
-                professor
-        );
+        validarDisponibilidade(dto, professor);
 
-        // Verifica individual/grupo
         validarFormatoEParticipantes(dto);
 
-        // Verifica preço mínimo
-        validarValorMinimo(
-                dto.valorAula(),
-                professor
-        );
+        validarValorMinimo(dto.valorAula(), professor);
 
         Aula aula =
-                aulaMapper.toEntity(
-                        dto,
-                        materia,
-                        professor
-                );
+                aulaMapper.toEntity(dto, materia, professor);
 
         return aulaMapper.toResponseDTO(
                 aulaRepository.save(aula)
@@ -90,10 +80,7 @@ public class AulaService {
     ) {
 
         return aulaMapper.toResponseDTO(
-                buscarEValidarPosse(
-                        id,
-                        professor
-                )
+                buscarEValidarPosse(id, professor)
         );
     }
 
@@ -103,11 +90,7 @@ public class AulaService {
             Professor professor
     ) {
 
-        Aula aula =
-                buscarEValidarPosse(
-                        id,
-                        professor
-                );
+        Aula aula = buscarEValidarPosse(id, professor);
 
         Materia materia =
                 materiaRepository.findById(dto.materiaId())
@@ -117,22 +100,13 @@ public class AulaService {
                                 )
                         );
 
-        validarMateriaDoProfessor(
-                materia,
-                professor
-        );
+        validarMateriaDoProfessor(materia, professor);
 
-        validarDisponibilidade(
-                dto,
-                professor
-        );
+        validarDisponibilidade(dto, professor);
 
         validarFormatoEParticipantes(dto);
 
-        validarValorMinimo(
-                dto.valorAula(),
-                professor
-        );
+        validarValorMinimo(dto.valorAula(), professor);
 
         aula.setMateria(materia);
         aula.setData(dto.data());
@@ -156,10 +130,7 @@ public class AulaService {
     ) {
 
         aulaRepository.delete(
-                buscarEValidarPosse(
-                        id,
-                        professor
-                )
+                buscarEValidarPosse(id, professor)
         );
     }
 
@@ -169,9 +140,7 @@ public class AulaService {
     ) {
 
         LocalTime horarioFim =
-                dto.horario().plusHours(
-                        dto.duracao()
-                );
+                dto.horario().plusHours(dto.duracao());
 
         if (horarioFim.equals(dto.horario())
                 || horarioFim.isBefore(dto.horario())) {
@@ -242,9 +211,7 @@ public class AulaService {
 
         TabelaPreco tabelaPreco =
                 tabelaPrecoRepository
-                        .findByTitulacao(
-                                professor.getTitulacao()
-                        )
+                        .findByTitulacao(professor.getTitulacao())
                         .orElseThrow(() ->
                                 new IllegalArgumentException(
                                         "Não existe valor mínimo configurado para a titulação "
@@ -307,6 +274,7 @@ public class AulaService {
         }
     }
 
+    // Inicia a aula e envia o link aos alunos com matrícula aceita.
     public AulaResponseDTO iniciarAula(
             Long id,
             Professor professor
@@ -315,23 +283,63 @@ public class AulaService {
         Aula aula = buscarEValidarPosse(id, professor);
 
         if (aula.getModalidade() != Modalidade.ONLINE) {
+
             throw new IllegalArgumentException(
                     "Só é possível iniciar sala de vídeo para aulas com modalidade ONLINE"
             );
         }
 
-        if (aula.getSalaUrl() != null) {
-            // Sala já foi criada antes, reaproveita em vez de criar outra
+        // Se a sala já existe, não cria outra nem reenvia os e-mails.
+        if (aula.getSalaUrl() != null
+                && !aula.getSalaUrl().isBlank()) {
+
             return aulaMapper.toResponseDTO(aula);
         }
 
-        DailyRoomResponseDTO sala = dailyService.criarSalaComGravacao();
+        // Cria a sala virtual no Daily.
+        DailyRoomResponseDTO sala =
+                dailyService.criarSalaComGravacao();
 
         aula.setSalaUrl(sala.url());
         aula.setSalaNome(sala.name());
 
-        return aulaMapper.toResponseDTO(
-                aulaRepository.save(aula)
-        );
+        // Salva a sala antes de enviar as notificações.
+        Aula aulaSalva = aulaRepository.save(aula);
+
+        // Busca somente os alunos com matrícula aceita nesta aula.
+        List<Matricula> matriculasAceitas =
+                matriculaRepository
+                        .findAllByAulaAndStatusOrderByDataSolicitacaoAsc(
+                                aulaSalva,
+                                StatusMatricula.ACEITA
+                        );
+
+        // Envia o link individualmente para cada aluno aprovado.
+        for (Matricula matricula : matriculasAceitas) {
+
+            Aluno aluno = matricula.getAluno();
+
+            String assunto =
+                    "Aula iniciada - " + aulaSalva.getMateria().getNome();
+
+            String mensagem =
+                    "Olá, " + aluno.getNome() + "!\n\n"
+                            + "Sua aula de "
+                            + aulaSalva.getMateria().getNome()
+                            + " foi iniciada.\n\n"
+                            + "Acesse a sala virtual pelo link abaixo:\n"
+                            + aulaSalva.getSalaUrl()
+                            + "\n\n"
+                            + "Até a aula!\n"
+                            + "Equipe EnAula";
+
+            emailService.enviarEmail(
+                    aluno.getEmail(),
+                    assunto,
+                    mensagem
+            );
+        }
+
+        return aulaMapper.toResponseDTO(aulaSalva);
     }
 }
