@@ -1,17 +1,15 @@
+
 package com.example.enaula.controller;
 
 import com.example.enaula.dto.ProfessorRequestDTO;
 import com.example.enaula.dto.ProfessorResponseDTO;
 import com.example.enaula.service.ProfessorService;
-
 import jakarta.validation.Valid;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -23,30 +21,25 @@ public class ProfessorController {
 
     private final ProfessorService professorService;
 
-    // ==========================
-    // CADASTRAR
-    // POST
-    // ==========================
-
-    @PostMapping
+    // CADASTRAR PROFESSOR COM FOTO OPCIONAL
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<ProfessorResponseDTO> cadastrar(
-            @Valid
-            @RequestBody ProfessorRequestDTO dto
+            @RequestPart("professor")
+            @Valid ProfessorRequestDTO dto,
+
+            @RequestPart(value = "foto", required = false)
+            MultipartFile foto
     ) {
 
         ProfessorResponseDTO professor =
-                professorService.cadastrarProfessor(dto);
+                professorService.cadastrarProfessor(dto, foto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(professor);
     }
 
-    // ==========================
-    // LISTAR TODOS
-    // GET
-    // ==========================
-
+    // LISTAR TODOS OS PROFESSORES
     @GetMapping
     public ResponseEntity<List<ProfessorResponseDTO>> listar() {
 
@@ -56,11 +49,7 @@ public class ProfessorController {
         return ResponseEntity.ok(professores);
     }
 
-    // ==========================
-    // BUSCAR POR ID
-    // GET
-    // ==========================
-
+    // BUSCAR PROFESSOR POR ID
     @GetMapping("/{id}")
     public ResponseEntity<ProfessorResponseDTO> buscarPorId(
             @PathVariable Long id
@@ -72,16 +61,11 @@ public class ProfessorController {
         return ResponseEntity.ok(professor);
     }
 
-    // ==========================
-    // ATUALIZAR
-    // PUT
-    // ==========================
-
+    // ATUALIZAR DADOS DO PROFESSOR
     @PutMapping("/{id}")
     public ResponseEntity<ProfessorResponseDTO> atualizar(
             @PathVariable Long id,
-            @Valid
-            @RequestBody ProfessorRequestDTO dto
+            @Valid @RequestBody ProfessorRequestDTO dto
     ) {
 
         ProfessorResponseDTO professor =
@@ -90,11 +74,7 @@ public class ProfessorController {
         return ResponseEntity.ok(professor);
     }
 
-    // ==========================
-    // DELETAR
-    // DELETE
-    // ==========================
-
+    // EXCLUIR PROFESSOR
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(
             @PathVariable Long id
@@ -102,8 +82,34 @@ public class ProfessorController {
 
         professorService.deletarProfessor(id);
 
-        return ResponseEntity
-                .noContent()
-                .build();
+        return ResponseEntity.noContent().build();
+    }
+
+    // ENVIAR OU TROCAR FOTO DO PROFESSOR
+    @PostMapping(
+            value = "/{id}/foto",
+            consumes = "multipart/form-data"
+    )
+    public ResponseEntity<ProfessorResponseDTO> enviarFoto(
+            @PathVariable Long id,
+            @RequestParam("arquivo") MultipartFile arquivo
+    ) {
+
+        ProfessorResponseDTO professor =
+                professorService.enviarFoto(id, arquivo);
+
+        return ResponseEntity.ok(professor);
+    }
+
+    // REMOVER FOTO DO PROFESSOR
+    @DeleteMapping("/{id}/foto")
+    public ResponseEntity<ProfessorResponseDTO> removerFoto(
+            @PathVariable Long id
+    ) {
+
+        ProfessorResponseDTO professor =
+                professorService.removerFoto(id);
+
+        return ResponseEntity.ok(professor);
     }
 }
