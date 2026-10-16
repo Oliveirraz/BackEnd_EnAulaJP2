@@ -2,7 +2,6 @@ package com.example.enaula.config;
 
 import com.example.enaula.entity.TabelaPreco;
 import com.example.enaula.entity.TitulacaoProfessor;
-import com.example.enaula.entity.TitulacaoProfessor;
 import com.example.enaula.repository.TabelaPrecoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
