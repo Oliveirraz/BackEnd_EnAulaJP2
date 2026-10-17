@@ -24,7 +24,7 @@ public class TabelaPreco {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true)
-    private TitulacaoMonitor titulacao;
+    private TitulacaoProfessor titulacao;
 
     @Column(
             name = "valor_minimo",

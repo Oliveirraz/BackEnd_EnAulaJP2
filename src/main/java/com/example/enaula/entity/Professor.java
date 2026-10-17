@@ -21,7 +21,7 @@ public class Professor extends Usuario {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "titulacao")
-    private TitulacaoMonitor titulacao;
+    private TitulacaoProfessor titulacao;
 
     @Column(
             name = "valor_hora_aula",
