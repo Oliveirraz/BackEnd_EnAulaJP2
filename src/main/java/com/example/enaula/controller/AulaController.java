@@ -4,12 +4,14 @@ import com.example.enaula.dto.AulaRequestDTO;
 import com.example.enaula.dto.AulaResponseDTO;
 import com.example.enaula.entity.Professor;
 import com.example.enaula.service.AulaService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -103,5 +105,28 @@ public class AulaController {
         return ResponseEntity.ok(
                 aulaService.iniciarAula(id, professor)
         );
+    }
+
+    // Método para o professor enviar a aula gravada.
+    @PostMapping(value = "/{id}/gravacao", consumes = "multipart/form-data")
+    public ResponseEntity<AulaResponseDTO> enviarGravacao(
+            @PathVariable Long id,
+            @RequestParam("arquivo") MultipartFile arquivo,
+            @AuthenticationPrincipal Professor professor
+    ) {
+
+        return ResponseEntity.ok(
+                aulaService.enviarGravacao(id, professor, arquivo)
+        );
+    }
+
+    // Método para que o aluno ou o professor possa baixar a aula
+    @GetMapping("/{id}/gravacao")
+    public void baixarGravacao(
+            @PathVariable Long id,
+            @AuthenticationPrincipal Object principal,
+            HttpServletResponse response
+    ) {
+        aulaService.baixarGravacao(id, principal, response);
     }
 }
