@@ -15,6 +15,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import io.minio.MinioClient;
+import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import io.minio.GetObjectArgs;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+
 import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
@@ -31,6 +43,17 @@ public class AulaService {
     private final DailyService dailyService;
     private final MatriculaRepository matriculaRepository;
     private final EmailService emailService;
+    private final MinioClient minioClient;
+
+    @Value("${minio.bucket.gravacoes}")
+    private String bucketGravacoes;
+
+    private static final List<String> TIPOS_VIDEO_PERMITIDOS = List.of(
+            "video/webm",
+            "video/mp4"
+    );
+
+    private static final long TAMANHO_MAXIMO_GRAVACAO = 500 * 1024 * 1024; // 500MB
 
     public AulaResponseDTO cadastrarAula(
             AulaRequestDTO dto,
@@ -306,5 +329,139 @@ public class AulaService {
         }
 
         return aulaMapper.toResponseDTO(aula);
+    }
+
+    // Método para enviar a gravação da aula para o minIO
+
+    @Transactional
+    public AulaResponseDTO enviarGravacao(
+            Long id,
+            Professor professor,
+            MultipartFile arquivo
+    ) {
+
+        Aula aula = buscarEValidarPosse(id, professor);
+
+        if (arquivo.isEmpty()) {
+            throw new IllegalArgumentException("Arquivo vazio.");
+        }
+
+        String tipoConteudo = arquivo.getContentType();
+        if (tipoConteudo == null || !TIPOS_VIDEO_PERMITIDOS.contains(tipoConteudo)) {
+            throw new IllegalArgumentException("Tipo de vídeo não permitido: " + tipoConteudo);
+        }
+
+        if (arquivo.getSize() > TAMANHO_MAXIMO_GRAVACAO) {
+            throw new IllegalArgumentException("Vídeo muito grande. Tamanho máximo: 500MB.");
+        }
+
+        if (aula.getGravacaoChaveObjeto() != null) {
+            removerGravacaoSilenciosamente(aula.getGravacaoChaveObjeto());
+        }
+
+        String chaveObjeto = "aulas/" + id + "/" + UUID.randomUUID() + "_" + arquivo.getOriginalFilename();
+
+        try {
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketGravacoes)
+                            .object(chaveObjeto)
+                            .stream(arquivo.getInputStream(), arquivo.getSize(), -1)
+                            .contentType(tipoConteudo)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Falha ao enviar gravação para o MinIO.", e);
+        }
+
+        aula.setGravacaoChaveObjeto(chaveObjeto);
+        aula.setGravacaoNomeOriginal(arquivo.getOriginalFilename());
+        aula.setGravacaoDataEnvio(LocalDateTime.now());
+
+        return aulaMapper.toResponseDTO(
+                aulaRepository.save(aula)
+        );
+    }
+
+    private void removerGravacaoSilenciosamente(String chaveObjeto) {
+        // Tenta apagar o arquivo antigo do bucket,
+        // usando a chave (nome do objeto) salva no banco
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucketGravacoes) // bucket onde as gravações ficam guardadas
+                            .object(chaveObjeto) // identifica exatamente qual arquivo remover
+                            .build()
+            );
+        } catch (Exception e) {
+            // Gravação antiga já não existe no MinIO por algum motivo — não trava o novo upload.
+            // Se a remoção falhar (ex: o arquivo já não existe mais no MinIO,
+            // ou o servidor MinIO está fora do ar no momento), não interrompe o fluxo.
+            // A prioridade aqui é permitir que o upload do vídeo NOVO continue
+            // mesmo que a limpeza do vídeo antigo não tenha dado certo.
+        }
+    }
+
+    public void baixarGravacao(
+            Long id,
+            Object principal,
+            HttpServletResponse response
+    ) {
+
+        Aula aula = aulaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Aula não encontrada"));
+
+        validarAcessoGravacao(aula, principal);
+
+        if (aula.getGravacaoChaveObjeto() == null) {
+            throw new ResourceNotFoundException("Essa aula ainda não possui gravação disponível.");
+        }
+
+        try {
+            InputStream stream = minioClient.getObject(
+                    GetObjectArgs.builder()
+                            .bucket(bucketGravacoes)
+                            .object(aula.getGravacaoChaveObjeto())
+                            .build()
+            );
+
+            response.setContentType("video/mp4");
+            response.setHeader(
+                    "Content-Disposition",
+                    "attachment; filename=\"" + aula.getGravacaoNomeOriginal() + "\""
+            );
+
+            stream.transferTo(response.getOutputStream());
+            stream.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException("Falha ao baixar gravação do MinIO.", e);
+        }
+    }
+
+    private void validarAcessoGravacao(Aula aula, Object principal) {
+
+        if (principal instanceof Professor professor) {
+            if (aula.getProfessor() != null
+                    && aula.getProfessor().getId().equals(professor.getId())) {
+                return;
+            }
+            throw new AccessDeniedException("Você não tem permissão para acessar essa gravação.");
+        }
+
+        if (principal instanceof Aluno aluno) {
+            boolean matriculado = matriculaRepository
+                    .findAllByAulaAndStatusOrderByDataSolicitacaoAsc(aula, StatusMatricula.ACEITA)
+                    .stream()
+                    .anyMatch(m -> m.getAluno() != null
+                            && m.getAluno().getId().equals(aluno.getId()));
+
+            if (matriculado) {
+                return;
+            }
+            throw new AccessDeniedException("Você não tem permissão para acessar essa gravação.");
+        }
+
+        throw new AccessDeniedException("Usuário não autorizado.");
     }
 }

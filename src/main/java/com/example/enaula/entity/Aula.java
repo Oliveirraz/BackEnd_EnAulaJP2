@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
@@ -48,6 +49,15 @@ public class Aula {
 
     @Column(name = "sala_nome")
     private String salaNome;
+
+    @Column(name = "gravacao_chave_objeto")
+    private String gravacaoChaveObjeto;
+
+    @Column(name = "gravacao_nome_original")
+    private String gravacaoNomeOriginal;
+
+    @Column(name = "gravacao_data_envio")
+    private LocalDateTime gravacaoDataEnvio;
 
     @Column(
             name = "valor_aula",
