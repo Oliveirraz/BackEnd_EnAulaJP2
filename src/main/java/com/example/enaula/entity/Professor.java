@@ -37,12 +37,7 @@ public class Professor extends Usuario {
     )
     private List<Materia> materias = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "professor",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    private List<Disponibilidade> disponibilidades = new ArrayList<>();
+
 
     @OneToMany(
             mappedBy = "professor",
