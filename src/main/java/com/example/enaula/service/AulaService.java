@@ -27,7 +27,6 @@ public class AulaService {
     private final MateriaRepository materiaRepository;
     private final TabelaPrecoRepository tabelaPrecoRepository;
     private final AulaMapper aulaMapper;
-    private final DisponibilidadeService disponibilidadeService;
     private final DailyService dailyService;
     private final MatriculaRepository matriculaRepository;
     private final EmailService emailService;
@@ -42,7 +41,7 @@ public class AulaService {
                 ));
 
         validarMateriaDoProfessor(materia, professor);
-        validarDisponibilidade(dto, professor);
+        validarHorarioSemConflito(dto, professor, null);
         validarFormatoEParticipantes(dto);
         validarValorMinimo(dto.valorAula(), professor);
 
@@ -77,7 +76,7 @@ public class AulaService {
                 ));
 
         validarMateriaDoProfessor(materia, professor);
-        validarDisponibilidade(dto, professor);
+        validarHorarioSemConflito(dto, professor, id);
         validarFormatoEParticipantes(dto);
         validarValorMinimo(dto.valorAula(), professor);
 
@@ -101,30 +100,54 @@ public class AulaService {
         );
     }
 
-    private void validarDisponibilidade(
+    private void validarHorarioSemConflito(
             AulaRequestDTO dto,
-            Professor professor
+            Professor professor,
+            Long idIgnorado
     ) {
-        LocalTime horarioFim =
-                dto.horario().plusHours(dto.duracao());
+        if (dto.data() == null || dto.horario() == null) {
+            throw new IllegalArgumentException(
+                    "A data e o horário da aula são obrigatórios"
+            );
+        }
 
-        if (horarioFim.equals(dto.horario())
-                || horarioFim.isBefore(dto.horario())) {
+        if (dto.duracao() == null || dto.duracao() < 1) {
+            throw new IllegalArgumentException(
+                    "A duração mínima da aula é de 1 hora"
+            );
+        }
+
+        LocalTime horarioInicio = dto.horario();
+        LocalTime horarioFim = horarioInicio.plusHours(dto.duracao());
+
+        if (!horarioFim.isAfter(horarioInicio)) {
             throw new IllegalArgumentException(
                     "A duração da aula ultrapassa o limite de um dia"
             );
         }
 
-        boolean disponivel = disponibilidadeService.estaDisponivel(
-                professor,
-                dto.data(),
-                dto.horario(),
-                horarioFim
-        );
+        List<Aula> aulasDoDia =
+                aulaRepository.findAllByProfessorAndData(
+                        professor,
+                        dto.data()
+                );
 
-        if (!disponivel) {
+        boolean existeConflito = aulasDoDia.stream()
+                .filter(aula -> idIgnorado == null
+                        || !aula.getId().equals(idIgnorado))
+                .anyMatch(aula -> {
+                    LocalTime inicioExistente = aula.getHorario();
+                    LocalTime fimExistente =
+                            inicioExistente.plusHours(aula.getDuracao());
+
+                    return horarioInicio.isBefore(fimExistente)
+                            && inicioExistente.isBefore(horarioFim);
+                });
+
+        if (existeConflito) {
             throw new IllegalArgumentException(
-                    "O horário informado não está dentro da disponibilidade do monitor"
+                    "O professor já possui uma aula nesse período. "
+                            + "Escolha outro horário para esta aula."
             );
         }
     }
@@ -159,7 +182,8 @@ public class AulaService {
     ) {
         if (professor.getTitulacao() == null) {
             throw new IllegalArgumentException(
-                    "O monitor precisa possuir uma titulação cadastrada para validar o valor mínimo da aula"
+                    "O professor precisa possuir uma titulação cadastrada "
+                            + "para validar o valor mínimo da aula"
             );
         }
 
@@ -225,11 +249,11 @@ public class AulaService {
 
         if (aula.getModalidade() != Modalidade.ONLINE) {
             throw new IllegalArgumentException(
-                    "Só é possível iniciar sala de vídeo para aulas com modalidade ONLINE"
+                    "Só é possível iniciar sala de vídeo para aulas "
+                            + "com modalidade ONLINE"
             );
         }
 
-        // Cria a sala somente se ainda não existir um link.
         if (aula.getSalaUrl() == null
                 || aula.getSalaUrl().isBlank()) {
 
@@ -242,7 +266,6 @@ public class AulaService {
             aula = aulaRepository.save(aula);
         }
 
-        // Recupera o link da sala, seja recém-criada ou já existente.
         String linkAula = aula.getSalaUrl();
 
         if (linkAula == null || linkAula.isBlank()) {
@@ -251,7 +274,6 @@ public class AulaService {
             );
         }
 
-        // Busca os alunos com matrícula aceita nesta aula.
         List<Matricula> matriculasAceitas =
                 matriculaRepository
                         .findAllByAulaAndStatusOrderByDataSolicitacaoAsc(
@@ -265,7 +287,6 @@ public class AulaService {
                         + matriculasAceitas.size()
         );
 
-        // Envia o link para cada aluno aprovado.
         for (Matricula matricula : matriculasAceitas) {
             Aluno aluno = matricula.getAluno();
 
@@ -279,12 +300,12 @@ public class AulaService {
             }
 
             String nomeMateria = aula.getMateria().getNome();
-
             String assunto = "Link da aula online - " + nomeMateria;
 
             String mensagem =
                     "Olá, " + aluno.getNome() + "!\n\n"
-                            + "Sua matrícula foi aceita e a aula online foi iniciada.\n\n"
+                            + "Sua matrícula foi aceita e a aula online "
+                            + "foi iniciada.\n\n"
                             + "Matéria: " + nomeMateria + "\n"
                             + "Data: " + aula.getData() + "\n"
                             + "Horário: " + aula.getHorario() + "\n\n"
