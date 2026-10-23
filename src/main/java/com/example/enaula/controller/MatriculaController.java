@@ -11,6 +11,7 @@ import com.example.enaula.service.MatriculaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,6 +27,10 @@ public class MatriculaController {
 
     private final MatriculaService matriculaService;
 
+    // Prazo configurável. O valor padrão é 24 horas.
+    @Value("${enaula.cancelamento.horas-antecedencia:24}")
+    private int horasAntecedenciaParaCancelar;
+
     // Aluno solicita matrícula.
     @PostMapping("/aulas/{aulaId}/matriculas")
     public ResponseEntity<MatriculaResponseDTO> solicitar(
@@ -37,42 +42,57 @@ public class MatriculaController {
                 .body(matriculaService.solicitar(aulaId, aluno));
     }
 
-    // Monitor lista as solicitações pendentes da própria aula.
+    // Professor lista as solicitações pendentes da própria aula.
     @GetMapping("/aulas/{aulaId}/matriculas/pendentes")
     public ResponseEntity<List<MatriculaResponseDTO>> listarPendentes(
             @PathVariable Long aulaId,
-            @AuthenticationPrincipal Professor monitor) {
+            @AuthenticationPrincipal Professor professor) {
 
         return ResponseEntity.ok(
-                matriculaService.listarPendentes(aulaId, monitor)
+                matriculaService.listarPendentes(aulaId, professor)
         );
     }
 
-    // Monitor aceita uma solicitação.
+    // Professor aceita uma solicitação.
     @PatchMapping("/matriculas/{matriculaId}/aceitar")
     public ResponseEntity<MatriculaResponseDTO> aceitar(
             @PathVariable Long matriculaId,
-            @AuthenticationPrincipal Professor monitor) {
+            @AuthenticationPrincipal Professor professor) {
 
         return ResponseEntity.ok(
-                matriculaService.aceitar(matriculaId, monitor)
+                matriculaService.aceitar(matriculaId, professor)
         );
     }
 
-    // Monitor recusa uma solicitação.
+    // Professor recusa uma solicitação.
     @PatchMapping("/matriculas/{matriculaId}/recusar")
     public ResponseEntity<MatriculaResponseDTO> recusar(
             @PathVariable Long matriculaId,
             @Valid @RequestBody RecusaMatriculaRequestDTO dto,
-            @AuthenticationPrincipal Professor monitor) {
+            @AuthenticationPrincipal Professor professor) {
 
         return ResponseEntity.ok(
                 matriculaService.recusar(
                         matriculaId,
                         dto.motivo(),
-                        monitor
+                        professor
                 )
         );
+    }
+
+    // Aluno cancela a própria matrícula.
+    @PatchMapping("/matriculas/{matriculaId}/cancelar")
+    public ResponseEntity<String> cancelar(
+            @PathVariable Long matriculaId,
+            @AuthenticationPrincipal Aluno aluno) {
+
+        String mensagem = matriculaService.cancelar(
+                matriculaId,
+                aluno,
+                horasAntecedenciaParaCancelar
+        );
+
+        return ResponseEntity.ok(mensagem);
     }
 
     // Aluno consulta as próprias notificações.

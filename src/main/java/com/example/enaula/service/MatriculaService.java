@@ -292,4 +292,113 @@ public class MatriculaService {
                 matricula.getDataDecisao()
         );
     }
+
+
+    // Aluno cancela a própria matrícula.
+    @Transactional
+    public String cancelar(
+            Long matriculaId,
+            Aluno alunoAutenticado,
+            int horasAntecedencia) {
+
+        // Verifica se existe um aluno autenticado.
+        if (alunoAutenticado == null
+                || alunoAutenticado.getId() == null) {
+
+            throw new AccessDeniedException(
+                    "Apenas alunos autenticados podem cancelar matrícula"
+            );
+        }
+
+        // Busca o aluno no banco de dados.
+        Aluno aluno = alunoRepository
+                .findById(alunoAutenticado.getId())
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Aluno não encontrado"
+                        )
+                );
+
+        // Busca a matrícula pertencente especificamente a esse aluno.
+        Matricula matricula = matriculaRepository
+                .findByIdAndAluno(matriculaId, aluno)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Matrícula não encontrada para este aluno"
+                        )
+                );
+
+        // Só permite cancelar matrículas pendentes ou aceitas.
+        if (matricula.getStatus() != StatusMatricula.PENDENTE
+                && matricula.getStatus() != StatusMatricula.ACEITA) {
+
+            throw new IllegalArgumentException(
+                    "Somente matrículas pendentes ou aceitas podem ser canceladas"
+            );
+        }
+
+        // Obtém a data e o horário de início da aula.
+        Aula aula = matricula.getAula();
+
+        LocalDateTime inicioAula = LocalDateTime.of(
+                aula.getData(),
+                aula.getHorario()
+        );
+
+        // Calcula o limite para cancelamento com possibilidade de reembolso.
+        LocalDateTime limiteCancelamento =
+                inicioAula.minusHours(horasAntecedencia);
+
+        LocalDateTime agora = LocalDateTime.now();
+
+        // Não permite cancelar depois que a aula começou.
+        if (!agora.isBefore(inicioAula)) {
+            throw new IllegalArgumentException(
+                    "Não é possível cancelar a matrícula depois do início da aula"
+            );
+        }
+
+        // Verifica se o cancelamento está dentro do prazo.
+        boolean dentroDoPrazo =
+                !agora.isAfter(limiteCancelamento);
+
+        // Atualiza o status da matrícula.
+        matricula.setStatus(StatusMatricula.CANCELADA);
+        matricula.setDataDecisao(agora);
+
+        Matricula matriculaSalva =
+                matriculaRepository.save(matricula);
+
+        // Prepara a mensagem para o aluno.
+        String nomeMateria = aula.getMateria().getNome();
+
+        String mensagem;
+
+        if (dentroDoPrazo) {
+            mensagem = "Sua matrícula na aula de "
+                    + nomeMateria
+                    + " foi cancelada dentro do prazo permitido.";
+        } else {
+            mensagem = "Sua matrícula na aula de "
+                    + nomeMateria
+                    + " foi cancelada fora do prazo de "
+                    + horasAntecedencia
+                    + " horas. Este cancelamento não gera reembolso.";
+        }
+
+        // Registra uma notificação para o aluno.
+        criarNotificacao(matriculaSalva, mensagem);
+
+        // Envia um e-mail informativo ao aluno.
+        emailService.enviarEmail(
+                aluno.getEmail(),
+                "Cancelamento de matrícula - EnAula",
+                "Olá, " + aluno.getNome() + "!\n\n"
+                        + mensagem + "\n\n"
+                        + "Acesse o EnAula para consultar suas aulas."
+        );
+
+        return mensagem;
+    }
+
 }
