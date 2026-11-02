@@ -27,6 +27,10 @@ public class ProfessorMapper {
                 dto.titulacao()
         );
 
+        // Coordenadas geográficas do professor
+        professor.setLatitude(dto.latitude());
+        professor.setLongitude(dto.longitude());
+
         return professor;
     }
 
@@ -60,5 +64,9 @@ public class ProfessorMapper {
         professor.setTitulacao(
                 dto.titulacao()
         );
+
+        // Atualiza as coordenadas geográficas
+        professor.setLatitude(dto.latitude());
+        professor.setLongitude(dto.longitude());
     }
 }

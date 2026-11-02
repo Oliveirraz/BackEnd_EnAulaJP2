@@ -28,7 +28,14 @@ public class Professor extends Usuario {
             precision = 10,
             scale = 2
     )
+
     private BigDecimal valorHoraAula;
+
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
 
     @OneToMany(
             mappedBy = "professor",

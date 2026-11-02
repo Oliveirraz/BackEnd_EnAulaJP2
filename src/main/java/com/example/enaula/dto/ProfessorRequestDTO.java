@@ -1,3 +1,4 @@
+
 package com.example.enaula.dto;
 
 import com.example.enaula.entity.TitulacaoProfessor;
@@ -36,7 +37,12 @@ public record ProfessorRequestDTO(
         BigDecimal valorHoraAula,
 
         @NotNull(message = "A titulação é obrigatória")
-        TitulacaoProfessor titulacao
+        TitulacaoProfessor titulacao,
+
+        // Coordenadas geográficas do professor
+        Double latitude,
+
+        Double longitude
 
 ) {
 }

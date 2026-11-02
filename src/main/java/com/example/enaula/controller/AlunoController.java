@@ -7,6 +7,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.example.enaula.dto.AlunoLocalizacaoRequestDTO;
+import com.example.enaula.entity.Aluno;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @RestController
 @RequestMapping("/api/alunos")
@@ -63,5 +68,23 @@ public class AlunoController {
     public AlunoResponseDTO removerFoto(@PathVariable Long id) {
 
         return alunoService.removerFoto(id);
+    }
+
+    @PutMapping("/minha-localizacao")
+    public AlunoResponseDTO atualizarMinhaLocalizacao(
+            @AuthenticationPrincipal UserDetails usuario,
+            @Valid @RequestBody AlunoLocalizacaoRequestDTO dto
+    ) {
+
+        if (!(usuario instanceof Aluno)) {
+            throw new AccessDeniedException(
+                    "Somente alunos podem atualizar sua localização."
+            );
+        }
+
+        return alunoService.atualizarLocalizacao(
+                usuario.getUsername(),
+                dto
+        );
     }
 }
