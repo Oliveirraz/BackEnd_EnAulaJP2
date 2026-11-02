@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import com.example.enaula.dto.AlunoLocalizacaoRequestDTO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -212,5 +214,25 @@ public class AlunoService {
             // Se a foto antiga já não existe no MinIO por algum motivo,
             // não faz sentido travar a troca por causa disso.
         }
+    }
+    @Transactional
+    public AlunoResponseDTO atualizarLocalizacao(
+            String email,
+            AlunoLocalizacaoRequestDTO dto
+    ) {
+
+        Aluno aluno = alunoRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Aluno não encontrado"
+                        )
+                );
+
+        aluno.setLatitude(dto.latitude());
+        aluno.setLongitude(dto.longitude());
+
+        return alunoMapper.toResponseDTO(
+                alunoRepository.save(aluno)
+        );
     }
 }

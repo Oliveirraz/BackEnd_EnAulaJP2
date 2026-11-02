@@ -1,5 +1,6 @@
 package com.example.enaula.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -14,6 +15,11 @@ import java.util.List;
 @Getter
 @Setter
 public class Aluno extends Usuario{
+    @Column(name = "latitude")
+    private Double latitude;
+
+    @Column(name = "longitude")
+    private Double longitude;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
