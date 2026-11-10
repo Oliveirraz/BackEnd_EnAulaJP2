@@ -15,7 +15,10 @@ import java.util.Optional;
 public interface MatriculaRepository
         extends JpaRepository<Matricula, Long> {
 
-    boolean existsByAulaAndAluno(Aula aula, Aluno aluno);
+    boolean existsByAulaAndAluno(
+            Aula aula,
+            Aluno aluno
+    );
 
     List<Matricula>
     findAllByAulaAndStatusOrderByDataSolicitacaoAsc(
@@ -24,15 +27,16 @@ public interface MatriculaRepository
     );
 
     List<Matricula>
-    findAllByAlunoOrderByDataSolicitacaoDesc(Aluno aluno);
+    findAllByAlunoOrderByDataSolicitacaoDesc(
+            Aluno aluno
+    );
 
     Optional<Matricula> findByIdAndAluno(
             Long id,
             Aluno aluno
     );
 
-    // Consulta as matrículas aceitas e canceladas do aluno.
-    // As aulas são ordenadas da mais recente para a mais antiga.
+    // HU024 - Histórico do aluno.
     @Query("""
             SELECT m FROM Matricula m
             JOIN FETCH m.aula a
@@ -47,5 +51,12 @@ public interface MatriculaRepository
             """)
     List<Matricula> buscarHistoricoDoAluno(
             @Param("aluno") Aluno aluno
+    );
+
+    // HU026 - Verifica a matrícula aceita do aluno na aula.
+    Optional<Matricula> findByAulaAndAlunoAndStatus(
+            Aula aula,
+            Aluno aluno,
+            StatusMatricula status
     );
 }
