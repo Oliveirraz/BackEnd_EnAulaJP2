@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -50,6 +51,7 @@ public class ProfessorController {
     }
 
     // BUSCAR PROFESSOR POR ID
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     @GetMapping("/{id}")
     public ResponseEntity<ProfessorResponseDTO> buscarPorId(
             @PathVariable Long id
@@ -62,6 +64,7 @@ public class ProfessorController {
     }
 
     // ATUALIZAR DADOS DO PROFESSOR
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     @PutMapping("/{id}")
     public ResponseEntity<ProfessorResponseDTO> atualizar(
             @PathVariable Long id,
@@ -76,6 +79,7 @@ public class ProfessorController {
 
     // EXCLUIR PROFESSOR
     @DeleteMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     public ResponseEntity<Void> deletar(
             @PathVariable Long id
     ) {
@@ -86,6 +90,7 @@ public class ProfessorController {
     }
 
     // ENVIAR OU TROCAR FOTO DO PROFESSOR
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     @PostMapping(
             value = "/{id}/foto",
             consumes = "multipart/form-data"
@@ -103,6 +108,7 @@ public class ProfessorController {
 
     // REMOVER FOTO DO PROFESSOR
     @DeleteMapping("/{id}/foto")
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     public ResponseEntity<ProfessorResponseDTO> removerFoto(
             @PathVariable Long id
     ) {

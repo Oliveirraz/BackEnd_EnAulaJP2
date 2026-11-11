@@ -3,10 +3,15 @@ package com.example.enaula.mapper;
 import com.example.enaula.dto.AlunoRequestDTO;
 import com.example.enaula.dto.AlunoResponseDTO;
 import com.example.enaula.entity.Aluno;
+import com.example.enaula.service.UrlFotoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class AlunoMapper {
+
+    private final UrlFotoService urlFotoService;
 
     public Aluno toEntity(AlunoRequestDTO dto) {
 
@@ -25,7 +30,8 @@ public class AlunoMapper {
                 aluno.getId(),
                 aluno.getNome(),
                 aluno.getEmail(),
-                aluno.getFoto()
+                aluno.getFoto(),
+                urlFotoService.gerarUrl(aluno.getFoto())
         );
     }
 

@@ -30,6 +30,7 @@ public class ProfessorService {
     private final AlunoRepository alunoRepository;
     private final ProfessorMapper professorMapper;
     private final MinioClient minioClient;
+    private final TabelaPrecoService tabelaPrecoService;
 
     @Value("${minio.bucket.fotos}")
     private String bucketFotos;
@@ -62,6 +63,14 @@ public class ProfessorService {
 
         // Converte os dados recebidos em uma entidade Professor.
         Professor professor = professorMapper.toEntity(dto);
+
+        // O valor da hora-aula nunca fica abaixo do mínimo da titulação.
+        professor.setValorHoraAula(
+                tabelaPrecoService.definirValorHoraAula(
+                        dto.titulacao(),
+                        dto.valorHoraAula()
+                )
+        );
 
         // Criptografa a senha antes de salvar.
         professor.setSenha(
@@ -135,6 +144,14 @@ public class ProfessorService {
 
         // Atualiza nome, e-mail, valor da aula e titulação.
         professorMapper.updateEntity(professor, dto);
+
+        // O valor da hora-aula nunca fica abaixo do mínimo da titulação.
+        professor.setValorHoraAula(
+                tabelaPrecoService.definirValorHoraAula(
+                        dto.titulacao(),
+                        dto.valorHoraAula()
+                )
+        );
 
         // Criptografa a senha nova antes de salvar.
         professor.setSenha(

@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @RestController
 @RequestMapping("/api/alunos")
@@ -27,6 +28,7 @@ public class AlunoController {
 
     // Buscar aluno por ID
     @GetMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO buscarAlunoPorId(
             @PathVariable Long id) {
 
@@ -35,6 +37,7 @@ public class AlunoController {
 
     // Atualizar aluno
     @PutMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO atualizarAluno(
             @PathVariable Long id,
             @Valid @RequestBody AlunoRequestDTO dto) {
@@ -44,6 +47,7 @@ public class AlunoController {
 
     // Deletar aluno
     @DeleteMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public void deletarAluno(@PathVariable Long id) {
 
         alunoService.deletarAluno(id);
@@ -51,6 +55,7 @@ public class AlunoController {
 
     // Enviar/trocar foto de perfil
     @PostMapping(value = "/{id}/foto", consumes = "multipart/form-data")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO enviarFoto(
             @PathVariable Long id,
             @RequestParam("arquivo") MultipartFile arquivo) {
@@ -60,6 +65,7 @@ public class AlunoController {
 
     // Remover foto de perfil
     @DeleteMapping("/{id}/foto")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO removerFoto(@PathVariable Long id) {
 
         return alunoService.removerFoto(id);

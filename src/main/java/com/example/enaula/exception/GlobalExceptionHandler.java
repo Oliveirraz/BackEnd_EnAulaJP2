@@ -22,7 +22,8 @@ public class GlobalExceptionHandler {
     // permissão para acessar ou executar determinada operação.
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> handleAccessDenied(AccessDeniedException ex) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Você não tem permissão para realizar esta operação.");
     }
 
     // Trata argumentos inválidos fornecidos durante uma operação.

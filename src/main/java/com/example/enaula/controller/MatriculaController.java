@@ -7,6 +7,7 @@ import com.example.enaula.dto.RecusaMatriculaRequestDTO;
 import com.example.enaula.entity.Aluno;
 import com.example.enaula.entity.Professor;
 import com.example.enaula.service.MatriculaService;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
