@@ -12,7 +12,9 @@ public record ProfessorResponseDTO(
         String perfil,
         BigDecimal valorHoraAula,
         TitulacaoProfessor titulacao,
-        String foto
+        String foto,
+        // Link temporário para exibir a foto (null se não há foto)
+        String fotoUrl
 
 ) {
 }
