@@ -3,10 +3,15 @@ package com.example.enaula.mapper;
 import com.example.enaula.dto.ProfessorRequestDTO;
 import com.example.enaula.dto.ProfessorResponseDTO;
 import com.example.enaula.entity.Professor;
+import com.example.enaula.service.UrlFotoService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class ProfessorMapper {
+
+    private final UrlFotoService urlFotoService;
 
     public Professor toEntity(
             ProfessorRequestDTO dto
@@ -27,10 +32,6 @@ public class ProfessorMapper {
                 dto.titulacao()
         );
 
-        // Coordenadas geográficas do professor
-        professor.setLatitude(dto.latitude());
-        professor.setLongitude(dto.longitude());
-
         return professor;
     }
 
@@ -45,7 +46,8 @@ public class ProfessorMapper {
                 professor.getPerfil(),
                 professor.getValorHoraAula(),
                 professor.getTitulacao(),
-                professor.getFoto()
+                professor.getFoto(),
+                urlFotoService.gerarUrl(professor.getFoto())
         );
     }
 
@@ -64,9 +66,6 @@ public class ProfessorMapper {
         professor.setTitulacao(
                 dto.titulacao()
         );
-
-        // Atualiza as coordenadas geográficas
-        professor.setLatitude(dto.latitude());
-        professor.setLongitude(dto.longitude());
     }
+
 }
