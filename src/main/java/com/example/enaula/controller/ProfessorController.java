@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,6 +52,7 @@ public class ProfessorController {
 
     // BUSCAR PROFESSOR POR ID
     @GetMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     public ResponseEntity<ProfessorResponseDTO> buscarPorId(
             @PathVariable Long id
     ) {
@@ -63,6 +65,7 @@ public class ProfessorController {
 
     // ATUALIZAR DADOS DO PROFESSOR
     @PutMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     public ResponseEntity<ProfessorResponseDTO> atualizar(
             @PathVariable Long id,
             @Valid @RequestBody ProfessorRequestDTO dto
@@ -76,6 +79,7 @@ public class ProfessorController {
 
     // EXCLUIR PROFESSOR
     @DeleteMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     public ResponseEntity<Void> deletar(
             @PathVariable Long id
     ) {
@@ -90,6 +94,7 @@ public class ProfessorController {
             value = "/{id}/foto",
             consumes = "multipart/form-data"
     )
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     public ResponseEntity<ProfessorResponseDTO> enviarFoto(
             @PathVariable Long id,
             @RequestParam("arquivo") MultipartFile arquivo
@@ -103,6 +108,7 @@ public class ProfessorController {
 
     // REMOVER FOTO DO PROFESSOR
     @DeleteMapping("/{id}/foto")
+    @PreAuthorize("@donoDoPerfil.ehProfessor(authentication, #id)")
     public ResponseEntity<ProfessorResponseDTO> removerFoto(
             @PathVariable Long id
     ) {

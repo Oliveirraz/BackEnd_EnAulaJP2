@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -67,6 +68,7 @@ public class AlunoController {
 
     // Buscar aluno por ID
     @GetMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO buscarAlunoPorId(
             @PathVariable Long id
     ) {
@@ -76,6 +78,7 @@ public class AlunoController {
 
     // Atualizar aluno
     @PutMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO atualizarAluno(
             @PathVariable Long id,
             @Valid @RequestBody AlunoRequestDTO dto
@@ -86,6 +89,7 @@ public class AlunoController {
 
     // Deletar aluno
     @DeleteMapping("/{id}")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public void deletarAluno(
             @PathVariable Long id
     ) {
@@ -98,6 +102,7 @@ public class AlunoController {
             value = "/{id}/foto",
             consumes = "multipart/form-data"
     )
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO enviarFoto(
             @PathVariable Long id,
             @RequestParam("arquivo") MultipartFile arquivo
@@ -108,6 +113,7 @@ public class AlunoController {
 
     // Remover foto de perfil
     @DeleteMapping("/{id}/foto")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO removerFoto(
             @PathVariable Long id
     ) {
@@ -117,6 +123,7 @@ public class AlunoController {
 
     // Atualizar localização do aluno autenticado
     @PutMapping("/minha-localizacao")
+    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO atualizarMinhaLocalizacao(
             @AuthenticationPrincipal UserDetails usuario,
             @Valid @RequestBody AlunoLocalizacaoRequestDTO dto
