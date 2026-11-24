@@ -1,4 +1,3 @@
-
 package com.example.enaula.service;
 
 import org.slf4j.Logger;
@@ -25,6 +24,7 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
+    // Envio padrão de e-mails do EnAula.
     public void enviarEmail(
             String destinatario,
             String assunto,
@@ -51,16 +51,55 @@ public class EmailService {
 
         try {
             mailSender.send(email);
+
             log.info(
-                    "E-mail de notificação enviado para {}",
+                    "E-mail enviado para {}",
                     destinatario
             );
+
         } catch (MailException e) {
+
             log.error(
                     "Falha ao enviar e-mail para {}",
                     destinatario,
                     e
             );
         }
+    }
+
+    // Envia o link de download da gravação ao aluno.
+    public void enviarEmailGravacao(
+            String destinatario,
+            String nomeAluno,
+            String nomeMateria,
+            String dataAula,
+            String horarioAula,
+            String linkDownload,
+            int validadeSegundos) {
+
+        long validadeHoras =
+                Math.max(1, validadeSegundos / 3600);
+
+        String assunto =
+                "Gravação disponível - " + nomeMateria;
+
+        String mensagem =
+                "Olá, " + nomeAluno + "!\n\n"
+                        + "A gravação da sua aula já está disponível.\n\n"
+                        + "Matéria: " + nomeMateria + "\n"
+                        + "Data: " + dataAula + "\n"
+                        + "Horário: " + horarioAula + "\n\n"
+                        + "Para baixar a gravação, acesse o link:\n\n"
+                        + linkDownload + "\n\n"
+                        + "Atenção: este link é temporário e ficará "
+                        + "válido por aproximadamente "
+                        + validadeHoras + " hora(s).\n\n"
+                        + "Equipe EnAula";
+
+        enviarEmail(
+                destinatario,
+                assunto,
+                mensagem
+        );
     }
 }

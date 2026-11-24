@@ -1,3 +1,4 @@
+
 package com.example.enaula.controller;
 
 import com.example.enaula.dto.AlunoRequestDTO;
@@ -31,7 +32,6 @@ import java.util.List;
 public class AlunoController {
 
     private final AlunoService alunoService;
-
     private final HistoricoAulaService historicoAulaService;
 
     // Criar aluno
@@ -41,7 +41,6 @@ public class AlunoController {
             @RequestPart(value = "foto", required = false)
             MultipartFile foto
     ) {
-
         return alunoService.criarAluno(dto, foto);
     }
 
@@ -53,16 +52,12 @@ public class AlunoController {
     public List<HistoricoAulaResponseDTO> consultarHistorico(
             @AuthenticationPrincipal UserDetails usuario
     ) {
-
-        // Verifica se o usuário autenticado é um aluno.
         if (!(usuario instanceof Aluno aluno)) {
-
             throw new AccessDeniedException(
                     "Somente alunos podem consultar o histórico de aulas."
             );
         }
 
-        // Consulta somente o histórico do aluno autenticado.
         return historicoAulaService.consultar(aluno);
     }
 
@@ -72,7 +67,6 @@ public class AlunoController {
     public AlunoResponseDTO buscarAlunoPorId(
             @PathVariable Long id
     ) {
-
         return alunoService.buscarAlunoPorId(id);
     }
 
@@ -83,7 +77,6 @@ public class AlunoController {
             @PathVariable Long id,
             @Valid @RequestBody AlunoRequestDTO dto
     ) {
-
         return alunoService.atualizarAluno(id, dto);
     }
 
@@ -93,7 +86,6 @@ public class AlunoController {
     public void deletarAluno(
             @PathVariable Long id
     ) {
-
         alunoService.deletarAluno(id);
     }
 
@@ -107,7 +99,6 @@ public class AlunoController {
             @PathVariable Long id,
             @RequestParam("arquivo") MultipartFile arquivo
     ) {
-
         return alunoService.enviarFoto(id, arquivo);
     }
 
@@ -117,20 +108,16 @@ public class AlunoController {
     public AlunoResponseDTO removerFoto(
             @PathVariable Long id
     ) {
-
         return alunoService.removerFoto(id);
     }
 
     // Atualizar localização do aluno autenticado
     @PutMapping("/minha-localizacao")
-    @PreAuthorize("@donoDoPerfil.ehAluno(authentication, #id)")
     public AlunoResponseDTO atualizarMinhaLocalizacao(
             @AuthenticationPrincipal UserDetails usuario,
             @Valid @RequestBody AlunoLocalizacaoRequestDTO dto
     ) {
-
         if (!(usuario instanceof Aluno)) {
-
             throw new AccessDeniedException(
                     "Somente alunos podem atualizar sua localização."
             );

@@ -1,14 +1,17 @@
 
 package com.example.enaula.controller;
 
+import com.example.enaula.dto.AlunoLocalizacaoRequestDTO;
 import com.example.enaula.dto.ProfessorRequestDTO;
 import com.example.enaula.dto.ProfessorResponseDTO;
+import com.example.enaula.entity.Professor;
 import com.example.enaula.service.ProfessorService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -117,5 +120,19 @@ public class ProfessorController {
                 professorService.removerFoto(id);
 
         return ResponseEntity.ok(professor);
+    }
+    // ATUALIZAR LOCALIZAÇÃO DO PROFESSOR AUTENTICADO
+    @PutMapping("/minha-localizacao")
+    public ResponseEntity<Void> atualizarMinhaLocalizacao(
+            @AuthenticationPrincipal Professor professor,
+            @Valid @RequestBody AlunoLocalizacaoRequestDTO dto
+    ) {
+        professorService.atualizarLocalizacao(
+                professor.getId(),
+                dto.latitude(),
+                dto.longitude()
+        );
+
+        return ResponseEntity.noContent().build();
     }
 }
