@@ -23,6 +23,8 @@ import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
 import io.minio.GetObjectArgs;
+import io.minio.GetPresignedObjectUrlArgs;
+import io.minio.http.Method;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -48,6 +50,21 @@ public class AulaService {
 
     @Value("${minio.bucket.gravacoes}")
     private String bucketGravacoes;
+
+    // Endereço público utilizado para gerar os links
+// que serão enviados aos alunos por e-mail.
+    @Value("${minio.public-url:${minio.url:http://localhost:9000}}")
+    private String minioPublicUrl;
+
+    @Value("${minio.access-key:minioadmin}")
+    private String minioAccessKey;
+
+    @Value("${minio.secret-key:minioadmin}")
+    private String minioSecretKey;
+
+    // Validade do link de download: 24 horas.
+    @Value("${enaula.gravacao.link-validade-segundos:86400}")
+    private int validadeLinkGravacaoSegundos;
 
     // HU024: prazo de retenção das gravações.
     @Value("${enaula.gravacao.retencao-dias:30}")
@@ -533,9 +550,88 @@ public class AulaService {
         aula.setGravacaoNomeOriginal(nomeOriginal);
         aula.setGravacaoDataEnvio(LocalDateTime.now());
 
-        return aulaMapper.toResponseDTO(
-                aulaRepository.save(aula)
-        );
+        Aula aulaSalva = aulaRepository.save(aula);
+
+        // Envia o link da gravação aos alunos matriculados.
+        notificarAlunosSobreGravacao(aulaSalva);
+
+        return aulaMapper.toResponseDTO(aulaSalva);
+    }
+
+    private void notificarAlunosSobreGravacao(Aula aula) {
+
+        try {
+
+            // Cria um cliente utilizando o endereço público.
+            // O cliente principal continua usando o endereço local
+            // para fazer o upload da gravação.
+            MinioClient clienteLinksPublicos =
+                    MinioClient.builder()
+                            .endpoint(minioPublicUrl)
+                            .credentials(
+                                    minioAccessKey,
+                                    minioSecretKey
+                            )
+                            .build();
+
+            // Gera o link temporário de download.
+            String linkDownload =
+                    clienteLinksPublicos.getPresignedObjectUrl(
+                            GetPresignedObjectUrlArgs.builder()
+                                    .method(Method.GET)
+                                    .bucket(bucketGravacoes)
+                                    .object(aula.getGravacaoChaveObjeto())
+                                    .expiry(validadeLinkGravacaoSegundos)
+                                    .build()
+                    );
+
+            // Busca todos os alunos com matrícula aceita.
+            List<Matricula> matriculasAceitas =
+                    matriculaRepository
+                            .findAllByAulaAndStatusOrderByDataSolicitacaoAsc(
+                                    aula,
+                                    StatusMatricula.ACEITA
+                            );
+
+            String nomeMateria =
+                    aula.getMateria() != null
+                            ? aula.getMateria().getNome()
+                            : "Aula EnAula";
+
+            for (Matricula matricula : matriculasAceitas) {
+
+                Aluno aluno = matricula.getAluno();
+
+                if (aluno == null
+                        || aluno.getEmail() == null
+                        || aluno.getEmail().isBlank()) {
+                    continue;
+                }
+
+                String nomeAluno =
+                        aluno.getNome() != null
+                                ? aluno.getNome()
+                                : "aluno(a)";
+
+                emailService.enviarEmailGravacao(
+                        aluno.getEmail(),
+                        nomeAluno,
+                        nomeMateria,
+                        aula.getData().toString(),
+                        aula.getHorario().toString(),
+                        linkDownload,
+                        validadeLinkGravacaoSegundos
+                );
+            }
+
+        } catch (Exception e) {
+
+            System.err.println(
+                    "Não foi possível enviar o link da gravação da aula "
+                            + aula.getId()
+                            + ": " + e.getMessage()
+            );
+        }
     }
 
 

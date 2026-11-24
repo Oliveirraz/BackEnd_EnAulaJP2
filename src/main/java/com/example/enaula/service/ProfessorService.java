@@ -309,4 +309,23 @@ public class ProfessorService {
             );
         }
     }
+    // ATUALIZAR LOCALIZAÇÃO DO PROFESSOR
+    @Transactional
+    public void atualizarLocalizacao(
+            Long professorId,
+            Double latitude,
+            Double longitude
+    ) {
+        Professor professor = professorRepository.findById(professorId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Professor não encontrado: " + professorId
+                        )
+                );
+
+        professor.setLatitude(latitude);
+        professor.setLongitude(longitude);
+
+        professorRepository.save(professor);
+    }
 }
