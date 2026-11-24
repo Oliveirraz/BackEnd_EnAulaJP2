@@ -59,4 +59,7 @@ public interface MatriculaRepository
             Aluno aluno,
             StatusMatricula status
     );
+
+    // HU012 - Lista todas as matrículas da aula, inclusive já decididas.
+    List<Matricula> findAllByAulaOrderByDataSolicitacaoAsc(Aula aula);
 }

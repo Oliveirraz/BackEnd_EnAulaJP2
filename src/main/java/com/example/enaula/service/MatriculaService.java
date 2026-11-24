@@ -401,4 +401,21 @@ public class MatriculaService {
         return mensagem;
     }
 
+    // Professor consulta todas as matrículas da própria aula, mantendo o histórico.
+    @Transactional(readOnly = true)
+    public List<MatriculaResponseDTO> listarTodasDaAula(
+            Long aulaId,
+            Professor professor) {
+
+        validarMonitorAutenticado(professor);
+
+        Aula aula = buscarAulaDoMonitor(aulaId, professor);
+
+        return matriculaRepository
+                .findAllByAulaOrderByDataSolicitacaoAsc(aula)
+                .stream()
+                .map(this::toDTO)
+                .toList();
+    }
+
 }

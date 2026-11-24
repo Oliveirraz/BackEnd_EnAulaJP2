@@ -105,5 +105,14 @@ public class MatriculaController {
         );
     }
 
-    
+    // Professor consulta todas as matrículas da aula, incluindo histórico.
+    @GetMapping("/aulas/{aulaId}/matriculas")
+    public ResponseEntity<List<MatriculaResponseDTO>> listarTodasDaAula(
+            @PathVariable Long aulaId,
+            @AuthenticationPrincipal Professor professor) {
+
+        return ResponseEntity.ok(
+                matriculaService.listarTodasDaAula(aulaId, professor)
+        );
+    }
 }
