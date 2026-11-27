@@ -1,3 +1,4 @@
+
 package com.example.enaula.mapper;
 
 import com.example.enaula.dto.MaterialApoioResponseDTO;
@@ -7,8 +8,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class MaterialApoioMapper {
 
-    public MaterialApoioResponseDTO toResponseDTO(MaterialApoio material) {
-
+    public MaterialApoioResponseDTO toResponseDTO(
+            MaterialApoio material
+    ) {
         return new MaterialApoioResponseDTO(
                 material.getId(),
                 material.getNomeOriginal(),
@@ -17,7 +19,10 @@ public class MaterialApoioMapper {
                 material.getDataEnvio(),
                 material.getAula().getId(),
                 material.getProfessor().getId(),
-                material.getProfessor().getNome()
+                material.getProfessor().getNome(),
+                material.getAula().getMateria().getNome(),
+                material.getAula().getData(),
+                material.getAula().getHorario()
         );
     }
 }

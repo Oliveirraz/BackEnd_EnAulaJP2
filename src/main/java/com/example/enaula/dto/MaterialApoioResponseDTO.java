@@ -1,3 +1,4 @@
+
 package com.example.enaula.dto;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,9 @@ public record MaterialApoioResponseDTO(
         LocalDateTime dataEnvio,
         Long aulaId,
         Long professorId,
-        String professorNome
+        String professorNome,
+        String materiaNome,
+        java.time.LocalDate aulaData,
+        java.time.LocalTime aulaHorario
 ) {
 }

@@ -1,3 +1,4 @@
+
 package com.example.enaula.repository;
 
 import com.example.enaula.entity.Aluno;
@@ -53,6 +54,12 @@ public interface MatriculaRepository
             @Param("aluno") Aluno aluno
     );
 
+    // Consulta matrículas do aluno por status.
+    List<Matricula> findAllByAlunoAndStatus(
+            Aluno aluno,
+            StatusMatricula status
+    );
+
     // HU026 - Verifica a matrícula aceita do aluno na aula.
     Optional<Matricula> findByAulaAndAlunoAndStatus(
             Aula aula,
@@ -61,5 +68,7 @@ public interface MatriculaRepository
     );
 
     // HU012 - Lista todas as matrículas da aula, inclusive já decididas.
-    List<Matricula> findAllByAulaOrderByDataSolicitacaoAsc(Aula aula);
+    List<Matricula> findAllByAulaOrderByDataSolicitacaoAsc(
+            Aula aula
+    );
 }
